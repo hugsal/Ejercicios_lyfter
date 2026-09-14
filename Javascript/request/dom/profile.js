@@ -18,24 +18,48 @@ const saveBtn = document.getElementById("save-btn");
 
 let user = null;
 
+const SESSION_DURATION = 5 * 60 * 1000;
+
 try {
   const storedUser = localStorage.getItem("user");
   if (!storedUser) {
-    window.location.href = "./register.html";
+    window.location.href = "./login.html";
   } else {
     user = JSON.parse(storedUser);
+
+    if (
+      !user ||
+      typeof user !== "object" ||
+      (user.expiresAt !== undefined &&
+        (!Number.isFinite(user.expiresAt) || Date.now() >= user.expiresAt))
+    ) {
+      localStorage.removeItem("user");
+      window.location.href = "./login.html";
+      throw new Error("La sesión ha expirado");
+    }
+
+    if (user.expiresAt === undefined) {
+      user.expiresAt = Date.now() + SESSION_DURATION;
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+
     profileId.textContent = user.id || "";
     profileName.textContent = user.name || "";
     profileEmail.textContent = user.data?.email || "";
   }
 } catch (error) {
-  alert("Error al cargar datos del usuario: " + error.message);
+  localStorage.removeItem("user");
+  window.location.href = "./login.html";
 }
 
 const logout = () => {
   localStorage.removeItem("user");
   window.location.href = "./login.html";
 };
+
+if (user?.expiresAt) {
+  window.setTimeout(logout, user.expiresAt - Date.now());
+}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", logout);
@@ -77,11 +101,11 @@ if (saveBtn) {
         updatedData,
       );
 
-      user = userData;
-      localStorage.setItem("user", JSON.stringify(userData));
+      user = { ...userData, expiresAt: user.expiresAt };
+      localStorage.setItem("user", JSON.stringify(user));
 
-      profileName.textContent = userData.name || "";
-      profileEmail.textContent = userData.data?.email || "";
+      profileName.textContent = user.name || "";
+      profileEmail.textContent = user.data?.email || "";
 
       formView.hidden = true;
       profileView.hidden = false;
