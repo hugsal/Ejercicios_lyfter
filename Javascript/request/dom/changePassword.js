@@ -19,7 +19,20 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  const { data: user } = await axiosInstance.get(`/objects/${id}`);
+  let user;
+
+  try {
+    const {data} = await axiosInstance.get(`/objects/${id}`);
+    user = data;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      alert("Usuario no encontrado");
+      return;
+    }
+
+    alert("No se pudo consultar el usuario");
+    return;
+  }
 
   if (!user) {
     alert("Usuario no encontrado");
@@ -32,11 +45,8 @@ form.addEventListener("submit", async (e) => {
   }
 
   user.data.password = newPassword;
-  user.name = "Lilo5";
-  user.data.email = "tu@yo.com";
 
   await axiosInstance.put(`/objects/${id}`, user);
 
   alert("Contraseña cambiada exitosamente");
 });
-const user = { name, data: { email, password } };
