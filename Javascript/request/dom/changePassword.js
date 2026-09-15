@@ -45,7 +45,6 @@ form.addEventListener("submit", async (e) => {
   }
 
   user.data.password = newPassword;
-  console.log(user.data);
 
   try {
     await axiosInstance.patch(`/objects/${id}`, { data: user.data });
