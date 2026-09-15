@@ -20,6 +20,16 @@ let user = null;
 
 const SESSION_DURATION = 5 * 60 * 1000;
 
+const expireSession = () => {
+  localStorage.removeItem("user");
+  window.location.href = "./login.html?msg=expired";
+};
+
+const logout = () => {
+  localStorage.removeItem("user");
+  window.location.href = "./login.html";
+};
+
 try {
   const storedUser = localStorage.getItem("user");
   if (!storedUser) {
@@ -33,32 +43,30 @@ try {
       (user.expiresAt !== undefined &&
         (!Number.isFinite(user.expiresAt) || Date.now() >= user.expiresAt))
     ) {
-      localStorage.removeItem("user");
-      window.location.href = "./login.html";
-      throw new Error("La sesión ha expirado");
-    }
+      expireSession();
+    } else {
+      if (user.expiresAt === undefined) {
+        user.expiresAt = Date.now() + SESSION_DURATION;
+        localStorage.setItem("user", JSON.stringify(user));
+      }
 
-    if (user.expiresAt === undefined) {
-      user.expiresAt = Date.now() + SESSION_DURATION;
-      localStorage.setItem("user", JSON.stringify(user));
+      profileId.textContent = user.id || "";
+      profileName.textContent = user.name || "";
+      profileEmail.textContent = user.data?.email || "";
     }
-
-    profileId.textContent = user.id || "";
-    profileName.textContent = user.name || "";
-    profileEmail.textContent = user.data?.email || "";
   }
 } catch (error) {
   localStorage.removeItem("user");
   window.location.href = "./login.html";
 }
 
-const logout = () => {
-  localStorage.removeItem("user");
-  window.location.href = "./login.html";
-};
-
 if (user?.expiresAt) {
-  window.setTimeout(logout, user.expiresAt - Date.now());
+  const timeRemaining = user.expiresAt - Date.now();
+  if (timeRemaining <= 0) {
+    expireSession();
+  } else {
+    window.setTimeout(expireSession, timeRemaining);
+  }
 }
 
 if (logoutBtn) {

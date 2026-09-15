@@ -24,6 +24,13 @@ const axiosInstance = axios.create({
 });
 
 const form = document.getElementById("login-form");
+const messageEl = document.getElementById("login-message");
+const urlParams = new URLSearchParams(window.location.search);
+
+if (urlParams.get("msg") === "expired" && messageEl) {
+  messageEl.className = "message error";
+  messageEl.textContent = "Sesión expirada, vuelva a iniciar sesión";
+}
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -51,7 +58,6 @@ form.addEventListener("submit", async (e) => {
     expiresAt: Date.now() + SESSION_DURATION,
   };
 
-  delete data.data.password;
-  localStorage.setItem("user", JSON.stringify(data));
+  localStorage.setItem("user", JSON.stringify(sessionUser));
   window.location.href = "./profile.html";
 });
