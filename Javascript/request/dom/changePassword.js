@@ -22,7 +22,7 @@ form.addEventListener("submit", async (e) => {
   let user;
 
   try {
-    const {data} = await axiosInstance.get(`/objects/${id}`);
+    const { data } = await axiosInstance.get(`/objects/${id}`);
     user = data;
   } catch (error) {
     if (error.response?.status === 404) {
@@ -46,7 +46,12 @@ form.addEventListener("submit", async (e) => {
 
   user.data.password = newPassword;
 
-  await axiosInstance.put(`/objects/${id}`, user);
+  try {
+    await axiosInstance.patch(`/objects/${id}`, { data: user.data });
+  } catch (error) {
+    alert("No se pudo cambiar la contraseña");
+    return;
+  }
 
   alert("Contraseña cambiada exitosamente");
 });

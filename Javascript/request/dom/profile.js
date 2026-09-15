@@ -88,10 +88,14 @@ if (cancelBtn) {
 if (saveBtn) {
   saveBtn.addEventListener("click", async () => {
     try {
+      const { data: serverUser } = await axiosInstance.get(
+        `/objects/${user.id}`,
+      );
+
       const updatedData = {
         name: nameInput.value,
         data: {
-          ...(user?.data || {}),
+          ...(serverUser?.data || {}),
           email: emailInput.value,
         },
       };
@@ -101,8 +105,12 @@ if (saveBtn) {
         updatedData,
       );
 
-      user = { ...userData, expiresAt: user.expiresAt };
-      localStorage.setItem("user", JSON.stringify(user));
+      if (userData?.data?.password) {
+        delete userData.data.password;
+      }
+
+      user = userData;
+      localStorage.setItem("user", JSON.stringify(userData));
 
       profileName.textContent = user.name || "";
       profileEmail.textContent = user.data?.email || "";

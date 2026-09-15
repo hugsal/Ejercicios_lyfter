@@ -24,7 +24,6 @@ const axiosInstance = axios.create({
 });
 
 const form = document.getElementById("login-form");
-const message = document.getElementById("login-message");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -40,18 +39,19 @@ form.addEventListener("submit", async (e) => {
     alert("Usuario o contraseña incorrectos");
     return;
   }
-  
+
   if (user.data.password !== password) {
     alert("Usuario o contraseña incorrectos");
     return;
   }
-  
+
   delete user.data.password;
   const sessionUser = {
     ...user,
     expiresAt: Date.now() + SESSION_DURATION,
   };
 
-  localStorage.setItem("user", JSON.stringify(sessionUser));
+  delete data.data.password;
+  localStorage.setItem("user", JSON.stringify(data));
   window.location.href = "./profile.html";
 });
