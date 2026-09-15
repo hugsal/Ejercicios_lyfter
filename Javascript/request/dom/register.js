@@ -33,7 +33,9 @@ form.addEventListener("submit", async (e) => {
     alert(`Usuario creado correctamente! Tu id es ${data.id}`);
     window.location.href = "./profile.html";
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "No se pudo registrar el usuario. Inténtalo de nuevo.";
+    const errorMessage =
+      error.response?.data?.message ||
+      "No se pudo registrar el usuario. Inténtalo de nuevo.";
     message.className = "message error";
     message.textContent = errorMessage;
   }

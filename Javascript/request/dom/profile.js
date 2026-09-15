@@ -21,7 +21,7 @@ let user = null;
 try {
   const storedUser = localStorage.getItem("user");
   if (!storedUser) {
-    window.location.href = "./register.html";
+    window.location.href = "./login.html";
   } else {
     user = JSON.parse(storedUser);
     profileId.textContent = user.id || "";
@@ -64,18 +64,26 @@ if (cancelBtn) {
 if (saveBtn) {
   saveBtn.addEventListener("click", async () => {
     try {
+      const { data: serverUser } = await axiosInstance.get(
+        `/objects/${user.id}`
+      );
+
       const updatedData = {
         name: nameInput.value,
         data: {
-          ...(user?.data || {}),
+          ...(serverUser?.data || {}),
           email: emailInput.value,
         },
       };
 
       const { data: userData } = await axiosInstance.put(
         `/objects/${user.id}`,
-        updatedData,
+        updatedData
       );
+
+      if (userData?.data?.password) {
+        delete userData.data.password;
+      }
 
       user = userData;
       localStorage.setItem("user", JSON.stringify(userData));
