@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="profile.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="changePassword.html">Cambiar Contraseña</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section id="profile-view">
+        <h1>Mi Perfil</h1>
+        <div id="profile-cards" class="profile-cards">
+          <div class="card">
+            <div class="card-title">ID de Usuario</div>
+            <div class="card-value" id="profile-id"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Nombre</div>
+            <div class="card-value" id="profile-name"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Correo Electrónico</div>
+            <div class="card-value" id="profile-email"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="edit-profile-view" hidden>
+        <h1>Editar Perfil</h1>
+        <form action="">
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" name="email" />
+          </div>
+          <button type="button" id="save-btn" class="btn-primary">
+            Guardar
+          </button>
+          <button type="button" id="cancel-btn" class="btn-secondary">
+            Cancelar
+          </button>
+        </form>
+      </section>
+
+      <button type="button" id="edit-btn" class="btn-primary">Editar</button>
+      <button type="button" id="logout-btn" class="btn-danger">
+        Cerrar Sesión
+      </button>
+    </main>
+  </body>
+</html>

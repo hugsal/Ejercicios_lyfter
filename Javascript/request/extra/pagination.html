@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paginación de Objetos - API Restful</title>
+    <link rel="stylesheet" href="pagination.css" />
+    <script src="pagination.js" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Objetos API</h1>
+        <p>Paginación dinámica de 5 elementos por página</p>
+      </header>
+      <div id="status-message" class="status-container">
+        Cargando objetos desde la API...
+      </div>
+
+      <main id="objects-container" class="objects-grid"></main>
+
+      <nav class="pagination-bar" aria-label="Navegación de páginas">
+        <button id="prev-btn" class="btn-pagination" disabled>
+          &larr; Anterior
+        </button>
+
+        <div id="page-info" class="page-indicator">
+          Página <strong id="current-page">1</strong> de
+          <strong id="total-pages">1</strong>
+        </div>
+
+        <button id="next-btn" class="btn-pagination">Siguiente &rarr;</button>
+      </nav>
+    </div>
+  </body>
+</html>
