@@ -18,24 +18,56 @@ const saveBtn = document.getElementById("save-btn");
 
 let user = null;
 
+const SESSION_DURATION = 5 * 60 * 1000;
+
+const expireSession = () => {
+  localStorage.removeItem("user");
+  window.location.href = "./login.html?msg=expired";
+};
+
+const logout = () => {
+  localStorage.removeItem("user");
+  window.location.href = "./login.html";
+};
+
 try {
   const storedUser = localStorage.getItem("user");
   if (!storedUser) {
     window.location.href = "./login.html";
   } else {
     user = JSON.parse(storedUser);
-    profileId.textContent = user.id || "";
-    profileName.textContent = user.name || "";
-    profileEmail.textContent = user.data?.email || "";
+
+    if (
+      !user ||
+      typeof user !== "object" ||
+      (user.expiresAt !== undefined &&
+        (!Number.isFinite(user.expiresAt) || Date.now() >= user.expiresAt))
+    ) {
+      expireSession();
+    } else {
+      if (user.expiresAt === undefined) {
+        user.expiresAt = Date.now() + SESSION_DURATION;
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+
+      profileId.textContent = user.id || "";
+      profileName.textContent = user.name || "";
+      profileEmail.textContent = user.data?.email || "";
+    }
   }
 } catch (error) {
-  alert("Error al cargar datos del usuario: " + error.message);
-}
-
-const logout = () => {
   localStorage.removeItem("user");
   window.location.href = "./login.html";
-};
+}
+
+if (user?.expiresAt) {
+  const timeRemaining = user.expiresAt - Date.now();
+  if (timeRemaining <= 0) {
+    expireSession();
+  } else {
+    window.setTimeout(expireSession, timeRemaining);
+  }
+}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", logout);
@@ -65,7 +97,7 @@ if (saveBtn) {
   saveBtn.addEventListener("click", async () => {
     try {
       const { data: serverUser } = await axiosInstance.get(
-        `/objects/${user.id}`
+        `/objects/${user.id}`,
       );
 
       const updatedData = {
@@ -78,7 +110,7 @@ if (saveBtn) {
 
       const { data: userData } = await axiosInstance.put(
         `/objects/${user.id}`,
-        updatedData
+        updatedData,
       );
 
       if (userData?.data?.password) {
@@ -88,8 +120,8 @@ if (saveBtn) {
       user = userData;
       localStorage.setItem("user", JSON.stringify(userData));
 
-      profileName.textContent = userData.name || "";
-      profileEmail.textContent = userData.data?.email || "";
+      profileName.textContent = user.name || "";
+      profileEmail.textContent = user.data?.email || "";
 
       formView.hidden = true;
       profileView.hidden = false;
