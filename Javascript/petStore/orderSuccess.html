@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hug's Store - Compra realizada con éxito</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="orderSuccess.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">Hug's Store</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="products.html">Productos</a></li>
+          <li><a href="cart.html">Carrito</a></li>
+          <li>
+            <button type="button" class="btn-login" id="log-out-btn">
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div class="success-container">
+        <section class="success-banner">
+          <div class="success-icon-wrapper">
+            <svg
+              class="success-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h1>Compra realizada con éxito</h1>
+          <p>
+            Tu pedido ha sido procesado correctamente. Recibirás un correo con
+            la confirmación y los detalles de tu compra.
+          </p>
+        </section>
+        <section class="success-summary-card">
+          <h2>Resumen de la compra</h2>
+
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="summary-table-body">
+              <!-- <tr>
+                <td class="product-name">Correa de Paseo Premium</td>
+                <td class="qty">1</td>
+                <td class="unit-price">25.00€</td>
+                <td class="subtotal">25.00€</td>
+              </tr> -->
+            </tbody>
+          </table>
+
+          <hr class="order-divider" />
+
+          <div class="order-total-row">
+            <span class="order-total-label">Total</span>
+            <span class="order-total-amount" id="totalCart"></span>
+          </div>
+        </section>
+        <div class="success-actions">
+          <a href="products.html" class="btn-primary">Volver al catálogo</a>
+          <a href="index.html" class="btn-secondary">Ir al inicio</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+      <p>&copy; 2026 Hug's Store. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

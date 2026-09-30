@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hug's Store - Iniciar sesión requerido</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">Hug's Store</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="products.html">Productos</a></li>
+          <li><a href="cart.html">Carrito</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="login.html" class="btn-login">Iniciar sesión</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="auth-card">
+        <div class="auth-card-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="56"
+            height="56"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="5" y="11" width="14" height="10" rx="2" ry="2"></rect>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+          </svg>
+        </div>
+        <h2 class="auth-card-title">Debes iniciar sesión para continuar</h2>
+        <p class="auth-card-text">
+          Protege tus compras y gestiona tu perfil con facilidad.
+        </p>
+        <a href="login.html" class="btn-auth-redirect">Ir a iniciar sesión</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 Hug's Store. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

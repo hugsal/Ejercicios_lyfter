@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hug's Store - Carrito de compras</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="cart.js" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">Hug's Store</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="products.html">Productos</a></li>
+          <button type="button" class="btn-login" id="log-out-btn">
+            Cerrar sesión
+          </button>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <h1 class="catalog-title">Carrito de compras</h1>
+
+      <div class="cart-layout" id="cartContent">
+        <section class="cart-items-list" id="cartItemsList"></section>
+        <aside class="cart-summary">
+          <div class="cart-summary-row">
+            <span class="cart-summary-label">Total:</span>
+            <span class="cart-summary-total" id="totalCart"></span>
+          </div>
+          <button class="btn-primary" style="width: 100%" id="checkout-btn">
+            Continuar al checkout
+          </button>
+        </aside>
+      </div>
+
+      <!--ESTADO VACÍO -->
+      <section class="empty-state hidden" id="cartEmptyState">
+        <svg
+          class="empty-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+          />
+          <line
+            x1="16"
+            y1="13"
+            x2="20"
+            y2="17"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="20"
+            y1="13"
+            x2="16"
+            y2="17"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <h2>Tu carrito está vacío</h2>
+        <p>Agrega productos desde el catálogo.</p>
+        <a href="products.html" class="btn-secondary">Ver productos</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 Hug's Store. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

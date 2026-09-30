@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hug's Store - Resumen del pedido</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./checkout.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">Hug's Store</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="products.html">Productos</a></li>
+          <li><a href="cart.html">Carrito</a></li>
+          <li>
+            <button type="button" class="btn-login" id="log-out-btn">
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div class="checkout-layout">
+        <section class="checkout-card">
+          <h2>Información de compra</h2>
+          <form id="checkoutForm">
+            <div class="form-group">
+              <label for="fullName">Nombre completo</label>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Ingresa tu nombre completo"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="correo@ejemplo.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="address">Dirección</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Dirección de entrega"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Teléfono</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="+506 0000-0000"
+                required
+              />
+            </div>
+
+            <p class="checkout-note">
+              Esta información se utilizará para completar la compra.
+            </p>
+          </form>
+        </section>
+
+        <section class="checkout-card">
+          <h2>Resumen del pedido</h2>
+
+          <div class="order-summary-list" id="cartContent">
+            <!-- Producto 1 -->
+            <!-- <div class="order-summary-item">
+              <div class="order-item-info">
+                <span class="order-item-title"
+                  >Alimento premium para perros</span
+                >
+                <span class="order-item-detail">1 x ₡15,000</span>
+              </div>
+              <span class="order-item-price">₡15,000</span>
+            </div> -->
+          </div>
+
+          <hr class="order-divider" />
+
+          <div class="order-total-row">
+            <span class="order-total-label">Total:</span>
+            <span class="order-total-amount" id="totalCart"></span>
+          </div>
+
+          <div class="checkout-actions">
+            <button type="submit" form="checkoutForm" class="btn-primary">
+              Confirmar compra
+            </button>
+            <a href="cart.html" class="btn-secondary">Cancelar</a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 Hug's Store. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

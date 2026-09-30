@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hug's Store - Detalle del Producto</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="productDetail.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">Hug's Store</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="products.html">Productos</a></li>
+          <li><a href="cart.html">Carrito</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="login.html" class="btn-login">Iniciar sesión</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="product-detail-layout" id="productDetailLayout">
+        <div class="product-detail-image-card">
+          <img id="detailImage" alt="Imagen" class="product-detail-img" />
+        </div>
+
+        <div class="product-detail-info-card">
+          <h1 class="product-detail-title" id="detailTitle"></h1>
+          <div class="product-detail-price" id="detailPrice"></div>
+          <div class="product-detail-category" id="detailCategory"></div>
+          <p class="product-detail-description" id="detailDescription"></p>
+          <div class="product-detail-actions">
+            <button type="button" class="btn-cart-detail" id="btnAddToCart">
+              Agregar al carrito
+            </button>
+            <button
+              type="button"
+              class="btn-secondary btn-back-catalog"
+              id="btnBackCatalog"
+            >
+              Volver al catálogo
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>&copy; 2026 Hug's Store. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>
