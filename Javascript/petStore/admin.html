@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hug's Store - Administración de productos</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="constants.js"></script>
+    <script src="axiosConfig.js"></script>
+    <script src="auth.js"></script>
+    <script src="apiServices.js"></script>
+    <script src="./admin.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo">Hug's Store</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="products.html">Productos</a></li>
+          <li><a href="cart.html">Carrito</a></li>
+          <li><a href="register.html">Registrarse</a></li>
+          <li>
+            <button type="button" class="btn-login" id="log-out-btn">
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="admin-header">
+        <h1 class="admin-title">Administración de productos</h1>
+        <p class="admin-subtitle">
+          En esta sección puedes gestionar el catálogo de productos de Hug's
+          Store.
+        </p>
+      </section>
+      <section class="admin-card">
+        <h2 class="admin-card-title">Listado de Productos</h2>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th style="text-align: right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="products-table">
+              <!-- <tr>
+                <td class="cell-id">001</td>
+                <td class="cell-name">Arnés Ajustable para Perro</td>
+                <td>$25.00</td>
+                <td>150</td>
+                <td class="cell-actions">
+                  <div class="actions-group">
+                    <button
+                      type="button"
+                      class="btn-action-edit"
+                      id="edit-btn-1"
+                    >
+                      Editar
+                    </button>
+                    <button type="button" class="btn-action-delete">
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-card">
+        <h2 class="admin-card-title">Registro de Ventas</h2>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID Venta</th>
+                <th>Cliente</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Total</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="sales-table">
+              <!-- Las filas de ventas se renderizan dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-card">
+        <h2 class="admin-card-title">Agregar nuevo producto</h2>
+        <form class="admin-form" id="add-product-form">
+          <div class="form-group">
+            <label for="add-product-name">Nombre</label>
+            <input
+              type="text"
+              id="add-product-name"
+              placeholder="Ej: Pelota de Juguete Resistente"
+              required
+              minlength="3"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="add-product-description">Descripción</label>
+            <textarea
+              id="add-product-description"
+              rows="3"
+              placeholder="Una descripción detallada del producto..."
+              required
+              minlength="5"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="add-product-price">Precio</label>
+            <input
+              type="number"
+              id="add-product-price"
+              placeholder="Ej: 19.99"
+              step="0.01"
+              min="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="add-product-stock">Stock</label>
+            <input
+              type="number"
+              id="add-product-stock"
+              placeholder="Ej: 50"
+              min="0"
+              step="1"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-admin-submit">
+            Agregar producto
+          </button>
+
+          <p class="admin-form-note">
+            Por favor completa todos los campos antes de agregar el producto.
+          </p>
+        </form>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>&copy; 2026 Hug's Store. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>
