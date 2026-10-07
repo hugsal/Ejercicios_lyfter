@@ -1,57 +1,59 @@
-try {
-  const user = localStorage.getItem("user");
-  if (!user) {
-    window.location.href = "./unauthorized.html";
-  }
-} catch (error) {
-  alert(error.message);
-}
+requireAuth("./unauthorized.html");
 
-const access_token = localStorage.getItem("access_token");
+let cartId = null;
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:4000",
-  timeout: 1000,
-  headers: {
-    "content-type": "application/json",
-    Authorization: `Bearer ${access_token}`,
-  },
-});
-
-async function getCart() {
+async function renderCheckoutCart() {
   try {
-    const {
-      data: { cart },
-    } = await axiosInstance.get("/carts/active");
+    const cart = await getActiveCart();
     cartId = cart.id;
     const total = document.getElementById("totalCart");
-    total.textContent = `₡${cart.totalAmount}`;
+    if (total) total.textContent = `₡${cart.totalAmount}`;
     const container = document.getElementById("cartContent");
-    cart.items.forEach((item) => {
-      const article = document.createElement("div");
-      article.classList.add("order-summary-item");
-      article.innerHTML = `
-              <div class="order-item-info">
-                <span class="order-item-title">${item.product.name}</span>
-                <span class="order-item-detail">${item.quantity} x ${item.product.price}</span>
-              </div>
-              <span class="order-item-price">${item.subtotal}</span>
-    `;
-      container.appendChild(article);
-    });
+    if (container && cart.items) {
+      container.replaceChildren();
+      cart.items.forEach((item) => {
+        const article = document.createElement("div");
+        article.classList.add("order-summary-item");
+        const info = document.createElement("div");
+        info.className = "order-item-info";
+        const title = document.createElement("span");
+        title.className = "order-item-title";
+        title.textContent = item.product.name ?? "";
+        const detail = document.createElement("span");
+        detail.className = "order-item-detail";
+        detail.textContent = `${item.quantity} x ${item.product.price}`;
+        info.append(title, detail);
+
+        const price = document.createElement("span");
+        price.className = "order-item-price";
+        price.textContent = item.subtotal;
+        article.append(info, price);
+        container.appendChild(article);
+      });
+    }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    const errorMessage =
+      error.response?.data?.message ||
+      "No se pudo cargar el resumen de la compra. Por favor intenta de nuevo.";
+    const container = document.getElementById("cartContent");
+    if (container) {
+      const message = document.createElement("p");
+      message.style.color = "#e53e3e";
+      message.style.padding = "0.5rem 0";
+      message.textContent = errorMessage;
+      container.replaceChildren(message);
+    }
+    alert(errorMessage);
   }
 }
-let cartId = null;
-getCart();
-const logoutBtn = document.getElementById("log-out-btn");
 
-logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  window.location.href = "./index.html";
+renderCheckoutCart();
+
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id === "log-out-btn") {
+    logout();
+  }
 });
 
 document.addEventListener("submit", async (event) => {
@@ -62,7 +64,7 @@ document.addEventListener("submit", async (event) => {
   const phone = document.getElementById("phone").value;
 
   try {
-    const { data } = await axiosInstance.post("/sales", {
+    await createSale({
       fullName,
       email,
       billingAddress: address,
@@ -72,6 +74,10 @@ document.addEventListener("submit", async (event) => {
     });
     window.location.href = `./orderSuccess.html?cartId=${cartId}`;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    const errorMessage =
+      error.response?.data?.message ||
+      "No se pudo completar la compra. Por favor verifica los datos e inténtalo de nuevo.";
+    alert(errorMessage);
   }
 });

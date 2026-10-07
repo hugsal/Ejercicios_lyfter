@@ -1,78 +1,74 @@
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:4000",
-  timeout: 1000,
-  headers: { "content-type": "application/json" },
-});
+let isAdminUser = false;
 
-async function isAdmin() {
+async function checkAdminState() {
   try {
-    const user = localStorage.getItem("user");
-    if (!user) return;
+    const userStr = localStorage.getItem("user");
+    if (!userStr) return;
     const token = localStorage.getItem("access_token");
-    const { data } = await axiosInstance.get("/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (user && data.user.role == "client") {
+    const user = await getMe(token);
+
+    if (user && user.role === "client") {
       window.location.href = "./products.html";
       return;
     }
     const roleInput = document.getElementById("role-group");
-    roleInput.classList.remove("hidden");
+    if (roleInput) roleInput.classList.remove("hidden");
     isAdminUser = true;
   } catch (error) {
     alert(error.message);
   }
 }
 
-let isAdminUser = false;
-
-isAdmin();
+checkAdminState();
 
 const form = document.getElementById("registerForm");
 const message = document.getElementById("register-message");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const userName = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  const user = { name, email, userName, password };
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const userName = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const userPayload = { name, email, userName, password };
 
-  if (isAdminUser) {
-    const role = document.getElementById("role").value;
-    user.role = role;
-  }
-
-  try {
-    const { data } = await axiosInstance.post("/signin", user);
-
-    if (!isAdminUser) {
-      const accessToken = data.access_token;
-      const refreshToken = data.refresh_token;
-      const { data: userResponse } = await axiosInstance.get("/me", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      localStorage.setItem("user", JSON.stringify(userResponse));
-      localStorage.setItem("access_token", accessToken);
-      localStorage.setItem("refresh_token", refreshToken);
-      alert(`Usuario creado correctamente! Tu id es ${userResponse.user.id}`);
-      window.location.href = "./products.html";
-      return;
+    if (isAdminUser) {
+      const role = document.getElementById("role").value;
+      userPayload.role = role;
     }
 
-    alert("Usuario creado correctamente!");
-    window.location.href = "./admin.html";
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.message ||
-      "No se pudo registrar el usuario. Inténtalo de nuevo.";
-    message.className = "message error";
-    message.textContent = errorMessage;
-  }
-});
+    try {
+      const data = await registerUser(userPayload);
+
+      if (!isAdminUser) {
+        const accessToken = data.access_token;
+        const refreshToken = data.refresh_token;
+
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+
+        const {
+          data: { user },
+        } = await getMe(accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        alert(`Usuario creado correctamente! Tu id es ${user.id}`);
+        window.location.href = "./products.html";
+        return;
+      }
+
+      alert("Usuario creado correctamente!");
+      window.location.href = "./admin.html";
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "No se pudo registrar el usuario. Inténtalo de nuevo.";
+      if (message) {
+        message.className = "message error";
+        message.textContent = errorMessage;
+      }
+    }
+  });
+}
