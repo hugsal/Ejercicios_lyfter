@@ -27,6 +27,15 @@ function Header({ setView }) {
           <li>
             <a href="#">Contacto</a>
           </li>
+          <li>
+            <a
+              onClick={() => {
+                setView("administration");
+              }}
+            >
+              Administracion
+            </a>
+          </li>
           {/* <button type="button" className="btn-login" id="log-out-btn">
             Cerrar sesión
           </button> */}

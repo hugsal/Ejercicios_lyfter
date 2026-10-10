@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Home from "./screens/home";
 import Products from "./screens/products";
 import ProductDetails from "./screens/productDetails";
+import Admin from "./screens/admin";
+import EditProduct from "./screens/editProduct";
+import { useProductsStore } from "./store/productsStore";
+import { products as productsMock } from "./assets/productsMock";
 
 function App() {
   const [view, setView] = useState("home");
   const [productId, setProductId] = useState(0);
+  const { setProducts } = useProductsStore();
+
+  useEffect(() => {
+    setProducts(productsMock);
+  }, []);
 
   return (
     <>
@@ -20,6 +29,12 @@ function App() {
         )}
         {view === "productDetails" && (
           <ProductDetails setView={setView} productId={productId} />
+        )}
+        {view === "administration" && (
+          <Admin setView={setView} setProductId={setProductId} />
+        )}
+        {view === "editProduct" && (
+          <EditProduct setView={setView} productId={productId} />
         )}
       </main>
       <Footer />

@@ -1,7 +1,8 @@
-import { products } from "../assets/productsMock";
+import { useProductsStore } from "../store/productsStore";
 
 // const products = [];
 function Products({ setView, setProductId }) {
+  const { products } = useProductsStore();
   if (products.length === 0) {
     return (
       <section className="empty-state">
