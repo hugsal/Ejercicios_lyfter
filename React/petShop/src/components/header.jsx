@@ -35,6 +35,26 @@ function Header({ view, setView }) {
           <li>
             <a href="#">Contacto</a>
           </li>
+          <li>
+            <button
+              type="button"
+              className={
+                view === "administration" || view === "editProduct"
+                  ? "active"
+                  : ""
+              }
+              aria-current={
+                view === "administration" || view === "editProduct"
+                  ? "page"
+                  : undefined
+              }
+              onClick={() => {
+                setView("administration");
+              }}
+            >
+              Administracion
+            </button>
+          </li>
         </ul>
       </nav>
     </header>

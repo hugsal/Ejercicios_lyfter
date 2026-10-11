@@ -1,4 +1,7 @@
-function ProductDetails({ products, productId, setView }) {
+import { useProductsStore } from "../store/productsStore";
+
+function ProductDetails({ productId, setView }) {
+  const { products } = useProductsStore();
   const product = products.find((product) => product.id === productId);
 
   return (

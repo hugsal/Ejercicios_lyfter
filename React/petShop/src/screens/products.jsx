@@ -1,6 +1,8 @@
+import { useProductsStore } from "../store/productsStore";
 import ProductCard from "../components/ProductCard";
 
-function Products({ products, setView, setProductId }) {
+function Products({ setView, setProductId }) {
+  const { products } = useProductsStore();
   if (products.length === 0) {
     return (
       <section className="empty-state">
