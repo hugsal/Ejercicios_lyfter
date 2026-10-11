@@ -167,10 +167,6 @@ function Admin({ setView, setProductId }) {
             <button type="submit" className="btn-admin-submit">
               Agregar producto
             </button>
-
-            <p className="admin-form-note">
-              Por favor completa todos los campos antes de agregar el producto.
-            </p>
           </Form>
         </Formik>
       </section>

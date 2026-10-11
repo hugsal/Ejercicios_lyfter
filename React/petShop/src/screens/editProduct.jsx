@@ -21,9 +21,6 @@ function EditProduct({ setView, productId }) {
       <h1 className="edit-product-title">Editar producto</h1>
 
       <section className="edit-product-card">
-        <p className="edit-form-warning hidden">
-          Por favor completa todos los campos antes de guardar los cambios.
-        </p>
         <Formik
           initialValues={{
             id: product.id,

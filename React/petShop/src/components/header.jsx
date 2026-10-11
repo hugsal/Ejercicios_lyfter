@@ -38,8 +38,16 @@ function Header({ view, setView }) {
           <li>
             <button
               type="button"
-              className={view === "administration" ? "active" : ""}
-              aria-current={view === "administration" ? "page" : undefined}
+              className={
+                view === "administration" || view === "editProduct"
+                  ? "active"
+                  : ""
+              }
+              aria-current={
+                view === "administration" || view === "editProduct"
+                  ? "page"
+                  : undefined
+              }
               onClick={() => {
                 setView("administration");
               }}
