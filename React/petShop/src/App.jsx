@@ -8,7 +8,7 @@ import ProductDetails from "./screens/productDetails";
 import Admin from "./screens/admin";
 import EditProduct from "./screens/editProduct";
 import { useProductsStore } from "./store/productsStore";
-import { products as productsMock } from "./assets/productsMock";
+import { products } from "./data/products.json";
 
 function App() {
   const [view, setView] = useState("home");
@@ -16,12 +16,12 @@ function App() {
   const { setProducts } = useProductsStore();
 
   useEffect(() => {
-    setProducts(productsMock);
+    setProducts(products);
   }, []);
 
   return (
     <>
-      <Header setView={setView} />
+      <Header view={view} setView={setView} />
       <main>
         {view === "home" && <Home setView={setView} />}
         {view === "products" && (
