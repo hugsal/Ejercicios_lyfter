@@ -1,35 +1,40 @@
-function Header({ setView }) {
+function Header({ view, setView }) {
   return (
     <header className="header">
-      <a className="logo" onClick={() => setView("home")}>
-        Hug's Store
-      </a>
+      <button type="button" className="logo" onClick={() => setView("home")}>
+        PawStore
+      </button>
       <nav>
         <ul className="nav-links">
           <li>
-            <a
-              onClick={() => {
-                setView("home");
-              }}
+            <button
+              type="button"
+              className={view === "home" ? "active" : ""}
+              aria-current={view === "home" ? "page" : undefined}
+              onClick={() => setView("home")}
             >
               Inicio
-            </a>
+            </button>
           </li>
           <li>
-            <a
-              onClick={() => {
-                setView("products");
-              }}
+            <button
+              type="button"
+              className={
+                view === "products" || view === "productDetails" ? "active" : ""
+              }
+              aria-current={
+                view === "products" || view === "productDetails"
+                  ? "page"
+                  : undefined
+              }
+              onClick={() => setView("products")}
             >
               Productos
-            </a>
+            </button>
           </li>
           <li>
             <a href="#">Contacto</a>
           </li>
-          {/* <button type="button" className="btn-login" id="log-out-btn">
-            Cerrar sesión
-          </button> */}
         </ul>
       </nav>
     </header>

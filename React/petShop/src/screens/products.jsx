@@ -1,7 +1,6 @@
-import { products } from "../assets/productsMock";
+import ProductCard from "../components/productCard";
 
-// const products = [];
-function Products({ setView, setProductId }) {
+function Products({ products, setView, setProductId }) {
   if (products.length === 0) {
     return (
       <section className="empty-state">
@@ -25,34 +24,19 @@ function Products({ setView, setProductId }) {
   }
 
   return (
-    <section className="products-grid">
-      {products.map((product, index) => (
-        <article className="product-card" key={index}>
-          <img
-            src={product.imagen}
-            alt={product.nombre}
-            className="product-image"
+    <>
+      <h2 className="catalog-title">Catálogo de productos</h2>
+      <section className="products-grid">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            setProductId={setProductId}
+            setView={setView}
           />
-          <div className="product-info">
-            <h3 className="product-title">{product.name}</h3>
-            <div className="product-price">{product.precio}</div>
-            <div className="product-stock">Stock: {product.stock}</div>
-            {/* <button type="button" className="btn-cart" data-product-id="5">
-              Agregar al carrito
-            </button> */}
-            <button
-              onClick={() => {
-                setProductId(product.id);
-                setView("productDetails");
-              }}
-              className="btn-card"
-            >
-              Ver detalles
-            </button>
-          </div>
-        </article>
-      ))}
-    </section>
+        ))}
+      </section>
+    </>
   );
 }
 

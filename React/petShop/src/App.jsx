@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Home from "./screens/home";
 import Products from "./screens/products";
 import ProductDetails from "./screens/productDetails";
+import { products } from "./data/products.json";
 
 function App() {
   const [view, setView] = useState("home");
@@ -12,14 +13,22 @@ function App() {
 
   return (
     <>
-      <Header setView={setView} />
+      <Header view={view} setView={setView} />
       <main>
         {view === "home" && <Home setView={setView} />}
         {view === "products" && (
-          <Products setProductId={setProductId} setView={setView} />
+          <Products
+            products={products}
+            setProductId={setProductId}
+            setView={setView}
+          />
         )}
         {view === "productDetails" && (
-          <ProductDetails setView={setView} productId={productId} />
+          <ProductDetails
+            products={products}
+            setView={setView}
+            productId={productId}
+          />
         )}
       </main>
       <Footer />

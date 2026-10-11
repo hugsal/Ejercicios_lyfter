@@ -1,16 +1,33 @@
-# React + Vite
+# PawStore
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación de tienda de mascotas desarrollada con React y Vite.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js y npm instalados.
 
-## React Compiler
+## Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Desde la carpeta `React/petShop`, instala las dependencias:
 
-## Expanding the ESLint configuration
+```bash
+npm ci
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Ejecución en desarrollo
+
+Inicia el servidor local:
+
+```bash
+npm run dev
+```
+
+Abre en el navegador la dirección que Vite muestre en la terminal, normalmente `http://localhost:5173`.
+
+## Otros comandos
+
+```bash
+npm run build    # Genera la versión de producción en dist/
+npm run preview  # Previsualiza localmente la versión generada
+npm run lint     # Ejecuta ESLint
+```

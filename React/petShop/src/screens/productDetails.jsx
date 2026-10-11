@@ -1,6 +1,4 @@
-import { products } from "../assets/productsMock";
-
-function ProductDetails({ productId, setView }) {
+function ProductDetails({ products, productId, setView }) {
   const product = products.find((product) => product.id === productId);
 
   return (
@@ -15,18 +13,14 @@ function ProductDetails({ productId, setView }) {
 
       <div className="product-detail-info-card">
         <h1 className="product-detail-title">{product.nombre}</h1>
-        <div className="product-detail-price">{product.precio}</div>
+        <div className="product-detail-price">${product.precio}</div>
         <div className="product-detail-category">{product.categoria}</div>
-        <div className="product-detail-stock">Stock: {product.stock}</div>
         <p className="product-detail-description">{product.descripcion}</p>
         <p className="product-detail-description">
           Más adelante aquí se podrá agregar este producto al carrito y
           completar la compra.
         </p>
         <div className="product-detail-actions">
-          {/* <button className="btn-cart-detail">
-            Agregar al carrito
-          </button> */}
           <button
             onClick={() => setView("products")}
             className="btn-secondary btn-back-catalog"
