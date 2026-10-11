@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import Home from "./screens/home";
-import Products from "./screens/products";
-import ProductDetails from "./screens/productDetails";
-import Admin from "./screens/admin";
-import EditProduct from "./screens/editProduct";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Products from "./screens/Products";
+import ProductDetails from "./screens/ProductDetails";
+import Admin from "./screens/Admin";
+import EditProduct from "./screens/EditProduct";
 import { useProductsStore } from "./store/productsStore";
+import Home from "./screens/Home";
 import { products } from "./data/products.json";
 
 function App() {

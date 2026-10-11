@@ -1,5 +1,5 @@
 import { useProductsStore } from "../store/productsStore";
-import ProductCard from "../components/productCard";
+import ProductCard from "../components/ProductCard";
 
 function Products({ setView, setProductId }) {
   const { products } = useProductsStore();
