@@ -1,4 +1,4 @@
-import ProductCard from "../components/productCard";
+import ProductCard from "../components/ProductCard";
 
 function Products({ products, setView, setProductId }) {
   if (products.length === 0) {

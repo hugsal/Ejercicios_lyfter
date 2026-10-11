@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import Home from "./screens/home";
-import Products from "./screens/products";
-import ProductDetails from "./screens/productDetails";
+import Footer from "./components/Footer";
+import Home from "./screens/Home";
+import Products from "./screens/Products";
+import ProductDetails from "./screens/ProductDetails";
 import { products } from "./data/products.json";
+import Header from "./components/Header";
 
 function App() {
   const [view, setView] = useState("home");
