@@ -1,21 +1,23 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useProductsStore } from "../store/productsStore";
+import apiServices from "../api/apiServices";
 
 const esquemaValidacion = Yup.object({
-  nombre: Yup.string().required("El nombre es obligatorio"),
-  descripcion: Yup.string().required("La descripción es obligatoria"),
-  categoria: Yup.string().required("La categoría es obligatoria"),
-  precio: Yup.number().required("El precio es obligatorio"),
-  imagen: Yup.string()
+  name: Yup.string().required("El nombre es obligatorio"),
+  description: Yup.string().required("La descripción es obligatoria"),
+  category: Yup.string().required("La categoría es obligatoria"),
+  price: Yup.number().required("El precio es obligatorio"),
+  image: Yup.string()
     .url("La imagen debe ser una URL válida")
     .required("La imagen es obligatoria"),
   stock: Yup.number().required("El stock es obligatorio"),
 });
 
 function EditProduct({ setView, productId }) {
-  const { products, updateProduct } = useProductsStore();
+  const { products } = useProductsStore();
   const product = products.find((product) => product.id === productId);
+
   return (
     <>
       <h1 className="edit-product-title">Editar producto</h1>
@@ -23,18 +25,21 @@ function EditProduct({ setView, productId }) {
       <section className="edit-product-card">
         <Formik
           initialValues={{
-            id: product.id,
-            nombre: product.nombre,
-            descripcion: product.descripcion,
-            categoria: product.categoria,
-            precio: product.precio,
-            imagen: product.imagen,
+            name: product.name,
+            description: product.description,
+            category: product.category,
+            price: product.price,
+            image: product.image,
             stock: product.stock,
           }}
           validationSchema={esquemaValidacion}
-          onSubmit={(values) => {
-            updateProduct(productId, values);
-            alert("Producto actualizado correctamente");
+          onSubmit={async (values) => {
+            try {
+              await apiServices.updateProduct(productId, values);
+              alert("Producto actualizado correctamente");
+            } catch (error) {
+              alert("Error al actualizar el producto");
+            }
             setView("administration");
           }}
         >
@@ -44,10 +49,10 @@ function EditProduct({ setView, productId }) {
               <Field
                 type="text"
                 id="editProductName"
-                name="nombre"
+                name="name"
                 minLength="3"
               />
-              <ErrorMessage name="nombre" component="p" />
+              <ErrorMessage name="name" component="p" />
             </div>
 
             <div className="form-group">
@@ -56,10 +61,10 @@ function EditProduct({ setView, productId }) {
                 as="textarea"
                 rows={3}
                 id="editProductDescription"
-                name="descripcion"
+                name="description"
                 minLength="5"
               />
-              <ErrorMessage name="descripcion" component="p" />
+              <ErrorMessage name="description" component="p" />
             </div>
 
             <div className="form-group">
@@ -67,10 +72,10 @@ function EditProduct({ setView, productId }) {
               <Field
                 type="text"
                 id="editProductCategory"
-                name="categoria"
+                name="category"
                 minLength="3"
               />
-              <ErrorMessage name="categoria" component="p" />
+              <ErrorMessage name="category" component="p" />
             </div>
 
             <div className="form-group">
@@ -78,11 +83,11 @@ function EditProduct({ setView, productId }) {
               <Field
                 type="number"
                 id="editProductPrice"
-                name="precio"
+                name="price"
                 step="0.01"
                 min="0.01"
               />
-              <ErrorMessage name="precio" component="p" />
+              <ErrorMessage name="price" component="p" />
             </div>
 
             <div className="form-group">
@@ -90,10 +95,10 @@ function EditProduct({ setView, productId }) {
               <Field
                 type="url"
                 id="editProductImage"
-                name="imagen"
+                name="image"
                 placeholder="Ej: https://example.com/image.jpg"
               />
-              <ErrorMessage name="imagen" component="p" />
+              <ErrorMessage name="image" component="p" />
             </div>
 
             <div className="form-group">

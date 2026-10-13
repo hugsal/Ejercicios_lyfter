@@ -1,20 +1,22 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useProductsStore } from "../store/productsStore";
+import apiServices from "../api/apiServices";
 
 const esquemaValidacion = Yup.object({
-  nombre: Yup.string().required("El nombre es obligatorio"),
-  descripcion: Yup.string().required("La descripción es obligatoria"),
-  categoria: Yup.string().required("La categoría es obligatoria"),
-  precio: Yup.number().required("El precio es obligatorio"),
-  imagen: Yup.string()
+  name: Yup.string().required("El nombre es obligatorio"),
+  description: Yup.string().required("La descripción es obligatoria"),
+  category: Yup.string().required("La categoría es obligatoria"),
+  price: Yup.number().required("El precio es obligatorio"),
+  image: Yup.string()
     .url("La imagen debe ser una URL válida")
     .required("La imagen es obligatoria"),
   stock: Yup.number().required("El stock es obligatorio"),
 });
 
 function Admin({ setView, setProductId }) {
-  const { products, deleteProduct, createProduct } = useProductsStore();
+  const { products, setProducts } = useProductsStore();
+
   return (
     <>
       <section className="admin-header">
@@ -42,9 +44,9 @@ function Admin({ setView, setProductId }) {
               {products.map((product) => (
                 <tr key={product.id}>
                   <td className="cell-id">{product.id}</td>
-                  <td className="cell-name">{product.nombre}</td>
-                  <td>${product.precio}</td>
-                  <td>{product.categoria}</td>
+                  <td className="cell-name">{product.name}</td>
+                  <td>${product.price}</td>
+                  <td>{product.category}</td>
                   <td>{product.stock}</td>
                   <td className="cell-actions">
                     <div className="actions-group">
@@ -59,9 +61,16 @@ function Admin({ setView, setProductId }) {
                       </button>
                       <button
                         className="btn-action-delete"
-                        onClick={() => {
-                          deleteProduct(product.id);
-                          alert("Producto eliminado correctamente");
+                        onClick={async () => {
+                          try {
+                            await apiServices.deleteProduct(product.id);
+                            alert("Producto eliminado correctamente");
+                            const productsData =
+                              await apiServices.getProducts();
+                            setProducts(productsData);
+                          } catch (error) {
+                            alert("Error al eliminar el producto");
+                          }
                         }}
                       >
                         Eliminar
@@ -79,18 +88,24 @@ function Admin({ setView, setProductId }) {
         <h2 className="admin-card-title">Agregar nuevo producto</h2>
         <Formik
           initialValues={{
-            nombre: "",
-            descripcion: "",
-            categoria: "",
-            precio: "",
-            imagen: "",
+            name: "",
+            description: "",
+            category: "",
+            price: "",
+            image: "",
             stock: "",
           }}
           validationSchema={esquemaValidacion}
-          onSubmit={(values, { resetForm }) => {
-            createProduct(values);
-            alert("Producto agregado correctamente");
-            resetForm();
+          onSubmit={async (values, { resetForm }) => {
+            try {
+              await apiServices.createProduct(values);
+              alert("Producto agregado correctamente");
+              resetForm();
+              const productsData = await apiServices.getProducts();
+              setProducts(productsData);
+            } catch (error) {
+              alert("Error al agregar el producto");
+            }
           }}
         >
           <Form className="admin-form" id="add-product-form">
@@ -98,10 +113,10 @@ function Admin({ setView, setProductId }) {
               <label htmlFor="addProductName">Nombre</label>
               <Field
                 id="addProductName"
-                name="nombre"
+                name="name"
                 placeholder="Ej: Pelota de Juguete Resistente"
               />
-              <ErrorMessage name="nombre" component="p" />
+              <ErrorMessage name="name" component="p" />
             </div>
 
             <div className="form-group">
@@ -110,10 +125,10 @@ function Admin({ setView, setProductId }) {
                 as="textarea"
                 rows={3}
                 id="addProductDescription"
-                name="descripcion"
+                name="description"
                 placeholder="Una descripción detallada del producto..."
               />
-              <ErrorMessage name="descripcion" component="p" />
+              <ErrorMessage name="description" component="p" />
             </div>
 
             <div className="form-group">
@@ -121,10 +136,10 @@ function Admin({ setView, setProductId }) {
               <Field
                 type="text"
                 id="addProductCategory"
-                name="categoria"
+                name="category"
                 placeholder="Ej: Juguetes"
               />
-              <ErrorMessage name="categoria" component="p" />
+              <ErrorMessage name="category" component="p" />
             </div>
 
             <div className="form-group">
@@ -132,12 +147,12 @@ function Admin({ setView, setProductId }) {
               <Field
                 type="number"
                 id="addProductPrice"
-                name="precio"
+                name="price"
                 placeholder="Ej: 19.99"
                 step="0.01"
                 min="0.01"
               />
-              <ErrorMessage name="precio" component="p" />
+              <ErrorMessage name="price" component="p" />
             </div>
 
             <div className="form-group">
@@ -145,10 +160,10 @@ function Admin({ setView, setProductId }) {
               <Field
                 type="url"
                 id="addProductImage"
-                name="imagen"
+                name="image"
                 placeholder="Ej: https://example.com/image.jpg"
               />
-              <ErrorMessage name="imagen" component="p" />
+              <ErrorMessage name="image" component="p" />
             </div>
 
             <div className="form-group">

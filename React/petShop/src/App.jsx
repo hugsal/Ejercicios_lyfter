@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -6,18 +6,12 @@ import Products from "./screens/Products";
 import ProductDetails from "./screens/ProductDetails";
 import Admin from "./screens/Admin";
 import EditProduct from "./screens/EditProduct";
-import { useProductsStore } from "./store/productsStore";
 import Home from "./screens/Home";
-import { products } from "./data/products.json";
+import Login from "./screens/Login";
 
 function App() {
   const [view, setView] = useState("home");
   const [productId, setProductId] = useState(0);
-  const { setProducts } = useProductsStore();
-
-  useEffect(() => {
-    setProducts(products);
-  }, []);
 
   return (
     <>
@@ -36,6 +30,7 @@ function App() {
         {view === "editProduct" && (
           <EditProduct setView={setView} productId={productId} />
         )}
+        {view === "login" && <Login setView={setView} />}
       </main>
       <Footer />
     </>
