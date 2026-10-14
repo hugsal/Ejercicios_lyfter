@@ -2,9 +2,11 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useLoginStore } from "../store/loginStore";
 import apiServices from "../api/apiServices";
+import { useProductsStore } from "../store/productsStore";
 
 function Login({ setView }) {
   const login = useLoginStore((state) => state.login);
+  const setProducts = useProductsStore((state) => state.setProducts);
 
   const onSubmit = async (values) => {
     const { userName, password } = values;
@@ -16,11 +18,14 @@ function Login({ setView }) {
       const { user } = await apiServices.getMe();
       const { role, userName: name } = user;
       login({ role, userName: name });
+      const products = await apiServices.getProducts();
+      setProducts(products);
       setView("products");
     } catch (error) {
       console.error(error.message);
     }
   };
+
   return (
     <div className="form-container">
       <h2>Iniciar Sesión</h2>
