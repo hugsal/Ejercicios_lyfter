@@ -1,7 +1,7 @@
 function ProductCard({ product, setProductId, setView }) {
   return (
-    <article className="product-card" key={product.id}>
-      <img src={product.imagen} alt={product.name} className="product-image" />
+    <article className="product-card">
+      <img src={product.image} alt={product.name} className="product-image" />
       <div className="product-info">
         <h3 className="product-title">{product.name}</h3>
         <div className="product-price">${product.price}</div>

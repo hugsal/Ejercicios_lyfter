@@ -1,26 +1,11 @@
-import { useEffect, useState } from "react";
-import apiServices from "../api/apiServices";
-
 function ProductDetails({ productId, setView }) {
-  const [product, setProduct] = useState({
-    name: "",
-    price: 0,
-    category: "",
-    description: "",
-    imagen: null,
-  });
+  const products = useProductsStore((state) => state.products);
+  const product = products.find((product) => product.id === productId);
 
-  useEffect(() => {
-    async function getProduct() {
-      try {
-        const product = await apiServices.getProductById(productId);
-        setProduct(product);
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-    getProduct();
-  }, [productId]);
+  if (!product) {
+    setView("products");
+    return;
+  }
 
   return (
     <section className="product-detail-layout">

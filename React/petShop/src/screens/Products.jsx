@@ -1,23 +1,8 @@
-import { useEffect } from "react";
-import apiServices from "../api/apiServices";
 import { useProductsStore } from "../store/productsStore";
 import ProductCard from "../components/ProductCard";
 
 function Products({ setView, setProductId }) {
-  const { products, setProducts } = useProductsStore();
-
-  useEffect(() => {
-    async function getProducts() {
-      try {
-        const productsData = await apiServices.getProducts();
-        setProducts(productsData);
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-    getProducts();
-  }, []);
-
+  const products = useProductsStore((state) => state.products);
   if (products.length === 0) {
     return (
       <section className="empty-state">

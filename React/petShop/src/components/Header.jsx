@@ -64,7 +64,7 @@ function Header({ view, setView }) {
                   setView("administration");
                 }}
               >
-                Administracion
+                Administración
               </button>
             </li>
           )}
