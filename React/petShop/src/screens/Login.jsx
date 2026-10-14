@@ -1,12 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useLoginStore } from "../store/loginStore";
 import apiServices from "../api/apiServices";
-import { useProductsStore } from "../store/productsStore";
 
-function Login({ setView }) {
+function Login() {
+  const navigate = useNavigate();
   const login = useLoginStore((state) => state.login);
-  const setProducts = useProductsStore((state) => state.setProducts);
 
   const onSubmit = async (values) => {
     const { userName, password } = values;
@@ -18,9 +18,8 @@ function Login({ setView }) {
       const { user } = await apiServices.getMe();
       const { role, userName: name } = user;
       login({ role, userName: name });
-      const products = await apiServices.getProducts();
-      setProducts(products);
-      setView("products");
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/productos");
     } catch (error) {
       console.error(error.message);
     }

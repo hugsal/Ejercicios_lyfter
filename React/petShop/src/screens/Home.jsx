@@ -1,4 +1,7 @@
-function Home({ setView }) {
+import { useNavigate } from "react-router-dom";
+
+function Home() {
+  const navigate = useNavigate();
   return (
     <>
       <section className="hero">
@@ -11,7 +14,7 @@ function Home({ setView }) {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button className="btn-primary" onClick={() => setView("login")}>
+        <button className="btn-primary" onClick={() => navigate("/login")}>
           Iniciar Sesion
         </button>
       </section>
