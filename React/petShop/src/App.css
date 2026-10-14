@@ -476,6 +476,7 @@ main {
 .admin-table th:last-child {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
+  text-align: right;
 }
 
 .admin-table tbody td {

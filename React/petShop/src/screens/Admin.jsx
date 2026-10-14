@@ -1,20 +1,11 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { useProductsStore } from "../store/productsStore";
-
-const esquemaValidacion = Yup.object({
-  nombre: Yup.string().required("El nombre es obligatorio"),
-  descripcion: Yup.string().required("La descripción es obligatoria"),
-  categoria: Yup.string().required("La categoría es obligatoria"),
-  precio: Yup.number().required("El precio es obligatorio"),
-  imagen: Yup.string()
-    .url("La imagen debe ser una URL válida")
-    .required("La imagen es obligatoria"),
-  stock: Yup.number().required("El stock es obligatorio"),
-});
+import ProductForm from "../components/ProductForm";
 
 function Admin({ setView, setProductId }) {
-  const { products, deleteProduct, createProduct } = useProductsStore();
+  const products = useProductsStore((state) => state.products);
+  const deleteProduct = useProductsStore((state) => state.deleteProduct);
+  const createProduct = useProductsStore((state) => state.createProduct);
+
   return (
     <>
       <section className="admin-header">
@@ -33,9 +24,9 @@ function Admin({ setView, setProductId }) {
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Precio</th>
-                <th>Categoria</th>
+                <th>Categoría</th>
                 <th>Stock</th>
-                <th style={{ textAlign: "right" }}>Acciones</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody id="products-table">
@@ -77,7 +68,8 @@ function Admin({ setView, setProductId }) {
 
       <section className="admin-card">
         <h2 className="admin-card-title">Agregar nuevo producto</h2>
-        <Formik
+        <ProductForm
+          className="admin-form"
           initialValues={{
             nombre: "",
             descripcion: "",
@@ -86,89 +78,17 @@ function Admin({ setView, setProductId }) {
             imagen: "",
             stock: "",
           }}
-          validationSchema={esquemaValidacion}
           onSubmit={(values, { resetForm }) => {
             createProduct(values);
             alert("Producto agregado correctamente");
             resetForm();
           }}
+          errorMessage="Por favor completa todos los campos antes de agregar el producto."
         >
-          <Form className="admin-form" id="add-product-form">
-            <div className="form-group">
-              <label htmlFor="addProductName">Nombre</label>
-              <Field
-                id="addProductName"
-                name="nombre"
-                placeholder="Ej: Pelota de Juguete Resistente"
-              />
-              <ErrorMessage name="nombre" component="p" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="addProductDescription">Descripción</label>
-              <Field
-                as="textarea"
-                rows={3}
-                id="addProductDescription"
-                name="descripcion"
-                placeholder="Una descripción detallada del producto..."
-              />
-              <ErrorMessage name="descripcion" component="p" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="addProductCategory">Categoria</label>
-              <Field
-                type="text"
-                id="addProductCategory"
-                name="categoria"
-                placeholder="Ej: Juguetes"
-              />
-              <ErrorMessage name="categoria" component="p" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="addProductPrice">Precio</label>
-              <Field
-                type="number"
-                id="addProductPrice"
-                name="precio"
-                placeholder="Ej: 19.99"
-                step="0.01"
-                min="0.01"
-              />
-              <ErrorMessage name="precio" component="p" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="addProductImage">URL Imagen</label>
-              <Field
-                type="url"
-                id="addProductImage"
-                name="imagen"
-                placeholder="Ej: https://example.com/image.jpg"
-              />
-              <ErrorMessage name="imagen" component="p" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="addProductStock">Stock</label>
-              <Field
-                type="number"
-                id="addProductStock"
-                name="stock"
-                placeholder="Ej: 50"
-                min="0"
-                step="1"
-              />
-              <ErrorMessage name="stock" component="p" />
-            </div>
-
-            <button type="submit" className="btn-admin-submit">
-              Agregar producto
-            </button>
-          </Form>
-        </Formik>
+          <button type="submit" className="btn-admin-submit">
+            Agregar producto
+          </button>
+        </ProductForm>
       </section>
     </>
   );

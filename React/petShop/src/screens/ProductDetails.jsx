@@ -1,8 +1,13 @@
 import { useProductsStore } from "../store/productsStore";
 
 function ProductDetails({ productId, setView }) {
-  const { products } = useProductsStore();
+  const products = useProductsStore((state) => state.products);
   const product = products.find((product) => product.id === productId);
+
+  if (!product) {
+    setView("products");
+    return;
+  }
 
   return (
     <section className="product-detail-layout">

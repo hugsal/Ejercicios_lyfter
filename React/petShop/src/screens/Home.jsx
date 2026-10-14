@@ -2,7 +2,7 @@ function Home({ setView }) {
   return (
     <>
       <section className="hero">
-        <h1>Bienvenido a Hug's Store</h1>
+        <h1>Bienvenido a PawStore</h1>
         <p>
           Somos una tienda dedicada a ofrecer productos de calidad para tus
           mascotas.
