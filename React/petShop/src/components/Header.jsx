@@ -6,6 +6,7 @@ function Header() {
   const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
   const role = useLoginStore((state) => state.role);
   const logout = useLoginStore((state) => state.logout);
+  const userName = useLoginStore((state) => state.userName);
   const isAdmin = role === "admin";
 
   return (
@@ -17,6 +18,12 @@ function Header() {
       >
         PawStore
       </button>
+      {isLoggedIn && (
+        <p className="user-info">
+          Sesión iniciada como: <strong>{userName}</strong>
+        </p>
+      )}
+
       <nav>
         <ul className="nav-links">
           {!isLoggedIn && (

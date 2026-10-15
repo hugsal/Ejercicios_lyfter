@@ -51,6 +51,12 @@ main {
   box-shadow: var(--shadow);
 }
 
+.user-info {
+  margin: 0 auto 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 .nav-links button.btn-login {
   background-color: #d96b43;
   color: white !important;
