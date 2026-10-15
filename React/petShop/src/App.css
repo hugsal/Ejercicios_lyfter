@@ -914,3 +914,105 @@ main {
 .form-footer a:hover {
   text-decoration: underline;
 }
+
+/* Resumen de Pedido / Checkout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+@media (max-width: 53.125rem) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkout-card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.checkout-card h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+}
+
+.checkout-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+}
+
+.order-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.order-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.order-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.2rem;
+}
+
+.order-item-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.order-item-price {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+.order-divider {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 1.5rem 0;
+}
+
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.8rem;
+}
+
+.order-total-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.order-total-amount {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-color);
+}
+
+.checkout-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}

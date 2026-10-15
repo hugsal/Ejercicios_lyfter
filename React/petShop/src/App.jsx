@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useLoginStore } from "./store/loginStore";
 import "./App.css";
@@ -13,7 +14,7 @@ import EditProduct from "./screens/EditProduct";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
-import { useEffect } from "react";
+import Checkout from "./screens/Checkout";
 
 function App() {
   const isLoadingAuth = useLoginStore((state) => state.isLoadingAuth);
@@ -39,6 +40,7 @@ function App() {
           <Route element={<PrivateRouter />}>
             <Route path="/productos" element={<Products />} />
             <Route path="/productos/:id" element={<ProductDetails />} />
+            <Route path="/checkout" element={<Checkout />} />
             {role === "admin" && (
               <>
                 <Route path="/admin" element={<Admin />} />

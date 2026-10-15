@@ -36,6 +36,20 @@ function ProductDetails() {
     );
   }
 
+  const handleAddProduct = async () => {
+    if (product.stock < 1) {
+      alert("No hay stock");
+      return;
+    }
+
+    try {
+      await apiServices.addToCart(Number(id));
+      alert("Producto agregado al carrito");
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   return (
     <section className="product-detail-layout">
       <div className="product-detail-image-card">
@@ -51,11 +65,15 @@ function ProductDetails() {
         <div className="product-detail-price">${product.price}</div>
         <div className="product-detail-category">{product.category}</div>
         <p className="product-detail-description">{product.description}</p>
-        <p className="product-detail-description">
-          Más adelante aquí se podrá agregar este producto al carrito y
-          completar la compra.
-        </p>
+
         <div className="product-detail-actions">
+          <button
+            type="button"
+            className="btn-secondary btn-back-catalog"
+            onClick={handleAddProduct}
+          >
+            Agregar al carrito
+          </button>
           <Link to="/productos" className="btn-secondary btn-back-catalog">
             Volver al catálogo
           </Link>
