@@ -1,10 +1,18 @@
+import { useEffect } from "react";
+import { useProductsStore } from "../store/productsStore";
+
 function ProductDetails({ productId, setView }) {
   const products = useProductsStore((state) => state.products);
   const product = products.find((product) => product.id === productId);
 
+  useEffect(() => {
+    if (!product) {
+      setView("products");
+    }
+  }, [product, setView]);
+
   if (!product) {
-    setView("products");
-    return;
+    return null;
   }
 
   return (

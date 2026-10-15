@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useProductsStore } from "../store/productsStore";
 import ProductForm from "../components/ProductForm";
 import apiServices from "../api/apiServices";
@@ -7,9 +8,14 @@ function EditProduct({ setView, productId }) {
 
   const product = products.find((product) => product.id === productId);
 
+  useEffect(() => {
+    if (!product) {
+      setView("administration");
+    }
+  }, [product, setView]);
+
   if (!product) {
-    setView("administration");
-    return;
+    return null;
   }
 
   return (
