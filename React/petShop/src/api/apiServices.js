@@ -35,9 +35,30 @@ async function loginUser(userName, password) {
   return data;
 }
 
+async function addToCart(productId, quantity = 1) {
+  const { data } = await axiosInstance.post("/carts/items", {
+    productId,
+    quantity,
+  });
+  return data;
+}
+
+async function getActiveCart() {
+  const { data } = await axiosInstance.get("/carts/active");
+  return data.cart;
+}
+
+async function createSale(saleData) {
+  const { data } = await axiosInstance.post("/sales", saleData);
+  return data;
+}
+
 export default {
+  addToCart,
+  createSale,
   getProducts,
   getProductById,
+  getActiveCart,
   createProduct,
   updateProduct,
   deleteProduct,

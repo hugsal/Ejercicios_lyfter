@@ -1,6 +1,8 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import { useLoginStore } from "../store/loginStore";
 
-function Header({ view, setView }) {
+function Header() {
+  const navigate = useNavigate();
   const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
   const role = useLoginStore((state) => state.role);
   const logout = useLoginStore((state) => state.logout);
@@ -9,7 +11,11 @@ function Header({ view, setView }) {
 
   return (
     <header className="header">
-      <button type="button" className="logo" onClick={() => setView("home")}>
+      <button
+        type="button"
+        className="logo"
+        onClick={() => navigate(isLoggedIn ? "/productos" : "/")}
+      >
         PawStore
       </button>
       {isLoggedIn && (
@@ -20,59 +26,62 @@ function Header({ view, setView }) {
 
       <nav>
         <ul className="nav-links">
-          <li>
-            <button
-              type="button"
-              className={view === "home" ? "active" : ""}
-              aria-current={view === "home" ? "page" : undefined}
-              onClick={() => setView("home")}
-            >
-              Inicio
-            </button>
-          </li>
-          {isLoggedIn && (
+          {!isLoggedIn && (
             <li>
-              <button
-                type="button"
-                className={
-                  view === "products" || view === "productDetails"
-                    ? "active"
-                    : ""
-                }
-                aria-current={
-                  view === "products" || view === "productDetails"
-                    ? "page"
-                    : undefined
-                }
-                onClick={() => setView("products")}
+              <NavLink
+                to="/"
+                style={({ isActive }) => ({
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
               >
-                Productos
-              </button>
+                Inicio
+              </NavLink>
             </li>
           )}
+          {isLoggedIn && (
+            <>
+              <li>
+                <NavLink
+                  to="/productos"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? "bold" : "normal",
+                  })}
+                >
+                  Productos
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/checkout"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? "bold" : "normal",
+                  })}
+                >
+                  Checkout
+                </NavLink>
+              </li>
+            </>
+          )}
           <li>
-            <a href="#">Contacto</a>
+            <NavLink
+              to="/contacto"
+              style={({ isActive }) => ({
+                fontWeight: isActive ? "bold" : "normal",
+              })}
+            >
+              Contacto
+            </NavLink>
           </li>
           {isAdmin && (
             <li>
-              <button
-                type="button"
-                className={
-                  view === "administration" || view === "editProduct"
-                    ? "active"
-                    : ""
-                }
-                aria-current={
-                  view === "administration" || view === "editProduct"
-                    ? "page"
-                    : undefined
-                }
-                onClick={() => {
-                  setView("administration");
-                }}
+              <NavLink
+                to="/admin"
+                style={({ isActive }) => ({
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
               >
                 Administración
-              </button>
+              </NavLink>
             </li>
           )}
           <li>
@@ -83,9 +92,9 @@ function Header({ view, setView }) {
                 if (isLoggedIn) {
                   localStorage.clear();
                   logout();
-                  setView("home");
+                  navigate("/");
                 } else {
-                  setView("login");
+                  navigate("/login");
                 }
               }}
             >

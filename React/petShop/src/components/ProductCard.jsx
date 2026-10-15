@@ -1,4 +1,6 @@
-function ProductCard({ product, setProductId, setView }) {
+import { Link } from "react-router";
+
+function ProductCard({ product }) {
   return (
     <article className="product-card">
       <img src={product.image} alt={product.name} className="product-image" />
@@ -6,15 +8,9 @@ function ProductCard({ product, setProductId, setView }) {
         <h3 className="product-title">{product.name}</h3>
         <div className="product-price">${product.price}</div>
         <div className="product-category">{product.category}</div>
-        <button
-          onClick={() => {
-            setProductId(product.id);
-            setView("productDetails");
-          }}
-          className="btn-card"
-        >
+        <Link to={`/productos/${product.id}`} className="btn-card">
           Ver detalles
-        </button>
+        </Link>
       </div>
     </article>
   );
