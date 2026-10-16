@@ -1,5 +1,19 @@
-function ProductDetails({ products, productId, setView }) {
+import { useEffect } from "react";
+import { useProductsStore } from "../store/productsStore";
+
+function ProductDetails({ productId, setView }) {
+  const products = useProductsStore((state) => state.products);
   const product = products.find((product) => product.id === productId);
+
+  useEffect(() => {
+    if (!product) {
+      setView("products");
+    }
+  }, [product, setView]);
+
+  if (!product) {
+    return null;
+  }
 
   return (
     <section className="product-detail-layout">

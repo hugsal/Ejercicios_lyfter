@@ -1,34 +1,32 @@
 import { useState } from "react";
 import "./App.css";
+import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Home from "./screens/Home";
 import Products from "./screens/Products";
 import ProductDetails from "./screens/ProductDetails";
-import { products } from "./data/products.json";
-import Header from "./components/Header";
+import Admin from "./screens/Admin";
+import EditProduct from "./screens/EditProduct";
+import Home from "./screens/Home";
 
 function App() {
   const [view, setView] = useState("home");
   const [productId, setProductId] = useState(0);
-
   return (
     <>
       <Header view={view} setView={setView} />
       <main>
         {view === "home" && <Home setView={setView} />}
         {view === "products" && (
-          <Products
-            products={products}
-            setProductId={setProductId}
-            setView={setView}
-          />
+          <Products setProductId={setProductId} setView={setView} />
         )}
         {view === "productDetails" && (
-          <ProductDetails
-            products={products}
-            setView={setView}
-            productId={productId}
-          />
+          <ProductDetails setView={setView} productId={productId} />
+        )}
+        {view === "administration" && (
+          <Admin setView={setView} setProductId={setProductId} />
+        )}
+        {view === "editProduct" && (
+          <EditProduct setView={setView} productId={productId} />
         )}
       </main>
       <Footer />
