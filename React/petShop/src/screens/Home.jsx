@@ -11,8 +11,8 @@ function Home({ setView }) {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button className="btn-primary" onClick={() => setView("products")}>
-          Ver productos
+        <button className="btn-primary" onClick={() => setView("login")}>
+          Iniciar Sesion
         </button>
       </section>
 

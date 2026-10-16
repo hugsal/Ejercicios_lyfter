@@ -20,7 +20,7 @@ function ProductForm({
             <label htmlFor="productName">Nombre</label>
             <Field
               id="productName"
-              name="nombre"
+              name="name"
               placeholder="Ej: Pelota de Juguete Resistente"
             />
           </div>
@@ -30,7 +30,7 @@ function ProductForm({
               as="textarea"
               rows={3}
               id="productDescription"
-              name="descripcion"
+              name="description"
               placeholder="Una descripción detallada del producto..."
             />
           </div>
@@ -39,7 +39,7 @@ function ProductForm({
             <Field
               type="text"
               id="productCategory"
-              name="categoria"
+              name="category"
               placeholder="Ej: Juguetes"
             />
           </div>
@@ -48,7 +48,7 @@ function ProductForm({
             <Field
               type="number"
               id="productPrice"
-              name="precio"
+              name="price"
               placeholder="Ej: 19.99"
               step="0.01"
               min="0.01"
@@ -59,7 +59,7 @@ function ProductForm({
             <Field
               type="url"
               id="productImage"
-              name="imagen"
+              name="image"
               placeholder="Ej: https://example.com/image.jpg"
             />
           </div>
