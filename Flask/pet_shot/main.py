@@ -109,13 +109,11 @@ def sigin():
 def login():
     """Inicio de sesión de usuarios."""
     data = request.json or {}
-    print(data)
     validate_login_data(data)
     db = get_db()
 
     email = data.get("email")
     user = UserRepository.get_user_by_email(db, email)
-    print(user)
     if not user or data.get("password") != user.get("password"):
         abort(401, "Usuario o Password incorrecto")
 
