@@ -1,8 +1,30 @@
+import { useEffect, useState } from "react";
 import { useProductsStore } from "../store/productsStore";
 import ProductCard from "../components/ProductCard";
+import apiServices from "../api/apiServices";
 
 function Products({ setView, setProductId }) {
+  const [loading, setLoading] = useState(true);
+  const setProducts = useProductsStore((state) => state.setProducts);
   const products = useProductsStore((state) => state.products);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const products = await apiServices.getProducts();
+      setProducts(products);
+      setLoading(false);
+    };
+    getProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="empty-state">
+        <h3>Cargando productos...</h3>
+      </section>
+    );
+  }
+
   if (products.length === 0) {
     return (
       <section className="empty-state">

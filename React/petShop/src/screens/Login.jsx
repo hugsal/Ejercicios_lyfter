@@ -2,27 +2,27 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useLoginStore } from "../store/loginStore";
 import apiServices from "../api/apiServices";
-import { useProductsStore } from "../store/productsStore";
+import { useState } from "react";
 
 function Login({ setView }) {
+  const [error, setError] = useState(null);
   const login = useLoginStore((state) => state.login);
-  const setProducts = useProductsStore((state) => state.setProducts);
 
   const onSubmit = async (values) => {
-    const { userName, password } = values;
+    console.log(values);
+    const { email, password } = values;
     try {
-      const data = await apiServices.loginUser(userName, password);
+      const data = await apiServices.loginUser(email, password);
       const { access_token, refresh_token } = data;
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
       const { user } = await apiServices.getMe();
+      localStorage.setItem("user", JSON.stringify(user));
       const { role, userName: name } = user;
       login({ role, userName: name });
-      const products = await apiServices.getProducts();
-      setProducts(products);
       setView("products");
     } catch (error) {
-      console.error(error.message);
+      setError("email o contraseña incorrectos");
     }
   };
 
@@ -32,12 +32,14 @@ function Login({ setView }) {
 
       <Formik
         initialValues={{
-          userName: "",
+          email: "",
           password: "",
         }}
         onSubmit={onSubmit}
         validationSchema={Yup.object({
-          userName: Yup.string().required("El usuario es obligatorio"),
+          email: Yup.string()
+            .email("El email debe ser válido")
+            .required("El email es obligatorio"),
           password: Yup.string()
             .required("La contraseña es obligatoria")
             .min(3, "La contraseña debe tener al menos 3 caracteres"),
@@ -45,14 +47,14 @@ function Login({ setView }) {
       >
         <Form id="loginForm">
           <div className="form-group">
-            <label htmlFor="userName">Usuario</label>
+            <label htmlFor="email">Correo electrónico</label>
             <Field
-              type="text"
-              id="userName"
-              name="userName"
-              placeholder="Ingresa tu usuario"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Ingresa tu correo electrónico"
             />
-            <ErrorMessage name="userName" component="p" />
+            <ErrorMessage name="email" component="p" />
           </div>
 
           <div className="form-group">
@@ -66,8 +68,9 @@ function Login({ setView }) {
             <ErrorMessage name="password" component="p" />
           </div>
 
+          {error && <p className="error-message">{error}</p>}
           <button type="submit" className="btn-primary">
-            Iniciar Sesión
+            Ingresar
           </button>
         </Form>
       </Formik>

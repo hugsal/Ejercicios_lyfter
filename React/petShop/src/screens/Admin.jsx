@@ -57,7 +57,7 @@ function Admin({ setView, setProductId }) {
                             const products = await apiServices.getProducts();
                             setProducts(products);
                           } catch (error) {
-                            console.error(error.message);
+                            alert(error.message);
                           }
                         }}
                       >
@@ -92,7 +92,7 @@ function Admin({ setView, setProductId }) {
               setProducts(products);
               resetForm();
             } catch (error) {
-              console.error(error.message);
+              alert(error.message);
             }
           }}
           errorMessage="Por favor completa todos los campos antes de agregar el producto."

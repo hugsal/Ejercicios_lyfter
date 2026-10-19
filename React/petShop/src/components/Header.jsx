@@ -30,26 +30,22 @@ function Header({ view, setView }) {
               Inicio
             </button>
           </li>
-          {isLoggedIn && (
-            <li>
-              <button
-                type="button"
-                className={
-                  view === "products" || view === "productDetails"
-                    ? "active"
-                    : ""
-                }
-                aria-current={
-                  view === "products" || view === "productDetails"
-                    ? "page"
-                    : undefined
-                }
-                onClick={() => setView("products")}
-              >
-                Productos
-              </button>
-            </li>
-          )}
+          <li>
+            <button
+              type="button"
+              className={
+                view === "products" || view === "productDetails" ? "active" : ""
+              }
+              aria-current={
+                view === "products" || view === "productDetails"
+                  ? "page"
+                  : undefined
+              }
+              onClick={() => setView("products")}
+            >
+              Productos
+            </button>
+          </li>
           <li>
             <a href="#">Contacto</a>
           </li>

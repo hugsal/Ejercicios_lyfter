@@ -8,6 +8,8 @@ def validate_product_data(data):
     name = data.get("name")
     price = data.get("price")
     stock = data.get("stock")
+    category = data.get("category")
+    image = data.get("image")
 
     if not name or not str(name).strip():
         abort(400, "El nombre del producto es obligatorio")
@@ -17,3 +19,9 @@ def validate_product_data(data):
 
     if stock is None or not isinstance(stock, int) or stock < 0:
         abort(400, "El stock es obligatorio y debe ser un número entero mayor o igual a 0")
+
+    if not category or not str(category).strip():
+        abort(400, "La categoría del producto es obligatoria")
+
+    if not image or not str(image).strip():
+        abort(400, "La URL de la imagen es obligatoria")

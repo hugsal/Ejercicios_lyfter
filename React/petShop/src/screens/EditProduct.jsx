@@ -5,6 +5,7 @@ import apiServices from "../api/apiServices";
 
 function EditProduct({ setView, productId }) {
   const products = useProductsStore((state) => state.products);
+  const setProducts = useProductsStore((state) => state.setProducts);
 
   const product = products.find((product) => product.id === productId);
 
@@ -38,9 +39,11 @@ function EditProduct({ setView, productId }) {
             try {
               await apiServices.updateProduct(productId, values);
               alert("Producto actualizado correctamente");
+              const products = await apiServices.getProducts();
+              setProducts(products);
               setView("administration");
             } catch (error) {
-              console.error(error.message);
+              alert(error.message);
             }
           }}
           errorMessage="Por favor completa todos los campos antes de guardar los cambios."
