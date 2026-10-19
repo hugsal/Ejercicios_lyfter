@@ -58,7 +58,7 @@ class UserRepository:
         user = db.scalar(stmt)
         if not user:
             return None
-        return UserRepository.format_user(user)
+        return UserRepository.format_user_with_password(user)
 
     @staticmethod
     def get_users(db):

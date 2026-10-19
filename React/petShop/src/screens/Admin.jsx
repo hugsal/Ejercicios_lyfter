@@ -95,7 +95,7 @@ function Admin() {
               refetch();
               resetForm();
             } catch (error) {
-              console.error(error.message);
+              alert(error.message);
             }
           }}
           errorMessage="Por favor completa todos los campos antes de agregar el producto."

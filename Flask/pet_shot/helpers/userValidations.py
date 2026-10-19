@@ -9,11 +9,14 @@ def validate_login_data(data):
     if not data:
         abort(400, "No hay datos del usuario")
 
-    user_name = data.get("userName")
+    email = data.get("email")
     password = data.get("password")
 
-    if not user_name:
-        abort(400, "El nombre de usuario es obligatorio")
+    if not email:
+        abort(400, "El email es obligatorio")
+
+    if not EMAIL_REGEX.match(email):
+        abort(400, "El email no es valido")
 
     if not password:
         abort(400, "El password es obligatorio")

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from flask import Flask, request, abort
+from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
 from database import engine, BaseDb, SessionLocal
@@ -24,6 +25,15 @@ from extension import jwt_manager
 from cacheManager import cache_manager
 
 app = Flask(__name__)
+
+CORS(app, resources={r"/*": {
+    "origins": [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"]
+}})
 
 @app.errorhandler(HTTPException)
 def handle_http_exception(e):
@@ -102,8 +112,8 @@ def login():
     validate_login_data(data)
     db = get_db()
 
-    user_name = data.get("userName")
-    user = UserRepository.get_user_by_user_name(db, user_name)
+    email = data.get("email")
+    user = UserRepository.get_user_by_email(db, email)
     if not user or data.get("password") != user.get("password"):
         abort(401, "Usuario o Password incorrecto")
 
@@ -189,7 +199,6 @@ def delete_user(user_id):
 
 
 @app.route("/products")
-@validate_roles(["admin", "client"])
 def get_products():
     cache_key = "products:all"
     cached_products = cache_manager.get(cache_key)
@@ -230,12 +239,14 @@ def create_product():
     price = float(data.get("price"))
     stock = int(data.get("stock"))
     description = data.get("description")
+    category = data.get("category")
+    image = data.get("image")    
 
     if ProductRepository.get_product_by_name(db, name):
         abort(400, "El producto ya existe")
 
     new_product = ProductRepository.create_product(
-        db, name, price, stock, description
+        db, name, price, stock, description, category, image
     )
 
     cache_manager.invalidate_products()
@@ -257,9 +268,11 @@ def update_product(product_id):
     price = float(data.get("price")) if data.get("price") is not None else None
     stock = int(data.get("stock")) if data.get("stock") is not None else None
     description = data.get("description")
+    category = data.get("category")
+    image = data.get("image")    
 
     updated_product = ProductRepository.update_product(
-        db, product["id"], name, price, stock, description
+        db, product["id"], name, price, stock, description, category, image
     )
 
     cache_manager.invalidate_products()
@@ -498,5 +511,5 @@ def refund_invoice(invoice_id):
 if __name__ == "__main__":
     with app.app_context():
         BaseDb.metadata.create_all(bind=engine)
-    app.run(host="localhost", port=4000, debug=True)
+    app.run(host="127.0.0.1", port=4000, debug=True)
 

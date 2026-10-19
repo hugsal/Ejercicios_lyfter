@@ -13,15 +13,17 @@ class ProductRepository:
             "description": product.description,
             "price": product.price,
             "stock": product.stock,
+            "category": product.category,
+            "image": product.image,
             "admission_date": product.admission_date.strftime("%d/%m/%Y")
             if product.admission_date
             else None,
         }
 
     @staticmethod
-    def create_product(db, name, price, stock, description=None):
+    def create_product(db, name, price, stock, description=None, category=None, image=None):
         new_product = Product(
-            name=name, price=price, stock=stock, description=description
+            name=name, price=price, stock=stock, description=description, category=category, image=image
         )
         db.add(new_product)
         db.commit()
@@ -54,7 +56,7 @@ class ProductRepository:
 
     @staticmethod
     def update_product(
-        db, product_id, name=None, price=None, stock=None, description=None
+        db, product_id, name=None, price=None, stock=None, description=None, category=None, image=None
     ):
         product = db.get(Product, int(product_id))
         if product:
@@ -66,6 +68,10 @@ class ProductRepository:
                 product.stock = stock
             if description is not None:
                 product.description = description
+            if category is not None:
+                product.category = category
+            if image is not None:
+                product.image = image
             db.commit()
             db.refresh(product)
             return ProductRepository.format_product(product)

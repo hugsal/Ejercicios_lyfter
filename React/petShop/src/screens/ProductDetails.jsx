@@ -54,7 +54,7 @@ function ProductDetails() {
     <section className="product-detail-layout">
       <div className="product-detail-image-card">
         <img
-          src={product.imagen}
+          src={product.image}
           alt={product.name}
           className="product-detail-img"
         />

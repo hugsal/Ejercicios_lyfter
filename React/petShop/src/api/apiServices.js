@@ -30,8 +30,8 @@ async function getMe() {
   return data;
 }
 
-async function loginUser(userName, password) {
-  const { data } = await axiosInstance.post("/login", { userName, password });
+async function loginUser(email, password) {
+  const { data } = await axiosInstance.post("/login", { email, password });
   return data;
 }
 

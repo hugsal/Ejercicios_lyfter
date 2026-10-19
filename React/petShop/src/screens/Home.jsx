@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useLoginStore } from "../store/loginStore";
 
 function Home() {
-  const navigate = useNavigate();
+  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
   return (
     <>
       <section className="hero">
@@ -14,9 +15,15 @@ function Home() {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button className="btn-primary" onClick={() => navigate("/login")}>
-          Iniciar Sesion
-        </button>
+        {isLoggedIn ? (
+          <Link to="/productos" className="btn-primary">
+            Ver productos
+          </Link>
+        ) : (
+          <Link to="/login" className="btn-primary">
+            Iniciar Sesion
+          </Link>
+        )}
       </section>
 
       <section className="info-section">

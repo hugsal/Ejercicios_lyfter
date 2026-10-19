@@ -38,29 +38,27 @@ function Header() {
               </NavLink>
             </li>
           )}
+          <li>
+            <NavLink
+              to="/productos"
+              style={({ isActive }) => ({
+                fontWeight: isActive ? "bold" : "normal",
+              })}
+            >
+              Productos
+            </NavLink>
+          </li>
           {isLoggedIn && (
-            <>
-              <li>
-                <NavLink
-                  to="/productos"
-                  style={({ isActive }) => ({
-                    fontWeight: isActive ? "bold" : "normal",
-                  })}
-                >
-                  Productos
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/checkout"
-                  style={({ isActive }) => ({
-                    fontWeight: isActive ? "bold" : "normal",
-                  })}
-                >
-                  Checkout
-                </NavLink>
-              </li>
-            </>
+            <li>
+              <NavLink
+                to="/checkout"
+                style={({ isActive }) => ({
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
+              >
+                Checkout
+              </NavLink>
+            </li>
           )}
           <li>
             <NavLink
