@@ -9,7 +9,6 @@ function Login({ setView }) {
   const login = useLoginStore((state) => state.login);
 
   const onSubmit = async (values) => {
-    console.log(values);
     const { email, password } = values;
     try {
       const data = await apiServices.loginUser(email, password);
