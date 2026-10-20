@@ -33,12 +33,12 @@ function App() {
       <main>
         <Routes>
           <Route path="*" element={<NotFound />} />
+          <Route path="/productos" element={<Products />} />
           <Route element={<PublicRouter />}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
           </Route>
           <Route element={<PrivateRouter />}>
-            <Route path="/productos" element={<Products />} />
             <Route path="/productos/:id" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
             {role === "admin" && (

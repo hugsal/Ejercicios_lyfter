@@ -1,6 +1,8 @@
 import { Link } from "react-router";
+import { useLoginStore } from "../store/loginStore";
 
 function ProductCard({ product }) {
+  const { isLoggedIn } = useLoginStore();
   return (
     <article className="product-card">
       <img src={product.image} alt={product.name} className="product-image" />
@@ -8,9 +10,13 @@ function ProductCard({ product }) {
         <h3 className="product-title">{product.name}</h3>
         <div className="product-price">${product.price}</div>
         <div className="product-category">{product.category}</div>
-        <Link to={`/productos/${product.id}`} className="btn-card">
-          Ver detalles
-        </Link>
+        {isLoggedIn ? (
+          <Link to={`/productos/${product.id}`} className="btn-card">
+            Ver detalles
+          </Link>
+        ) : (
+          <p>Debes iniciar sesión para ver los detalles del producto</p>
+        )}
       </div>
     </article>
   );
