@@ -1,10 +1,10 @@
 import { useProductsStore } from "../store/productsStore";
 import ProductForm from "../components/ProductForm";
+import apiServices from "../api/apiServices";
 
 function Admin({ setView, setProductId }) {
   const products = useProductsStore((state) => state.products);
-  const deleteProduct = useProductsStore((state) => state.deleteProduct);
-  const createProduct = useProductsStore((state) => state.createProduct);
+  const setProducts = useProductsStore((state) => state.setProducts);
 
   return (
     <>
@@ -33,9 +33,9 @@ function Admin({ setView, setProductId }) {
               {products.map((product) => (
                 <tr key={product.id}>
                   <td className="cell-id">{product.id}</td>
-                  <td className="cell-name">{product.nombre}</td>
-                  <td>${product.precio}</td>
-                  <td>{product.categoria}</td>
+                  <td className="cell-name">{product.name}</td>
+                  <td>${product.price}</td>
+                  <td>{product.category}</td>
                   <td>{product.stock}</td>
                   <td className="cell-actions">
                     <div className="actions-group">
@@ -50,9 +50,15 @@ function Admin({ setView, setProductId }) {
                       </button>
                       <button
                         className="btn-action-delete"
-                        onClick={() => {
-                          deleteProduct(product.id);
-                          alert("Producto eliminado correctamente");
+                        onClick={async () => {
+                          try {
+                            await apiServices.deleteProduct(product.id);
+                            alert("Producto eliminado correctamente");
+                            const products = await apiServices.getProducts();
+                            setProducts(products);
+                          } catch (error) {
+                            alert(error.message);
+                          }
                         }}
                       >
                         Eliminar
@@ -71,17 +77,23 @@ function Admin({ setView, setProductId }) {
         <ProductForm
           className="admin-form"
           initialValues={{
-            nombre: "",
-            descripcion: "",
-            categoria: "",
-            precio: "",
-            imagen: "",
+            name: "",
+            description: "",
+            category: "",
+            price: "",
+            image: "",
             stock: "",
           }}
-          onSubmit={(values, { resetForm }) => {
-            createProduct(values);
-            alert("Producto agregado correctamente");
-            resetForm();
+          onSubmit={async (values, { resetForm }) => {
+            try {
+              await apiServices.createProduct(values);
+              alert("Producto agregado correctamente");
+              const products = await apiServices.getProducts();
+              setProducts(products);
+              resetForm();
+            } catch (error) {
+              alert(error.message);
+            }
           }}
           errorMessage="Por favor completa todos los campos antes de agregar el producto."
         >

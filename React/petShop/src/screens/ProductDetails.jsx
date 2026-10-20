@@ -19,17 +19,17 @@ function ProductDetails({ productId, setView }) {
     <section className="product-detail-layout">
       <div className="product-detail-image-card">
         <img
-          src={product.imagen}
-          alt={product.nombre}
+          src={product.image}
+          alt={product.name}
           className="product-detail-img"
         />
       </div>
 
       <div className="product-detail-info-card">
-        <h1 className="product-detail-title">{product.nombre}</h1>
-        <div className="product-detail-price">${product.precio}</div>
-        <div className="product-detail-category">{product.categoria}</div>
-        <p className="product-detail-description">{product.descripcion}</p>
+        <h1 className="product-detail-title">{product.name}</h1>
+        <div className="product-detail-price">${product.price}</div>
+        <div className="product-detail-category">{product.category}</div>
+        <p className="product-detail-description">{product.description}</p>
         <p className="product-detail-description">
           Más adelante aquí se podrá agregar este producto al carrito y
           completar la compra.

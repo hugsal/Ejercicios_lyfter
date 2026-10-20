@@ -1,4 +1,19 @@
+import { useEffect } from "react";
+import { useLoginStore } from "../store/loginStore";
+
 function Home({ setView }) {
+  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
+  const isLoadingAuth = useLoginStore((state) => state.isLoadingAuth);
+  const isLogged = useLoginStore((state) => state.isLogged);
+
+  useEffect(() => {
+    isLogged();
+  }, []);
+
+  if (isLoadingAuth) {
+    return <div>Cargando...</div>;
+  }
+
   return (
     <>
       <section className="hero">
@@ -11,8 +26,11 @@ function Home({ setView }) {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button className="btn-primary" onClick={() => setView("products")}>
-          Ver productos
+        <button
+          className="btn-primary"
+          onClick={() => setView(isLoggedIn ? "products" : "login")}
+        >
+          {isLoggedIn ? "Ver productos" : "Iniciar sesión"}
         </button>
       </section>
 

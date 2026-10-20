@@ -7,10 +7,12 @@ import ProductDetails from "./screens/ProductDetails";
 import Admin from "./screens/Admin";
 import EditProduct from "./screens/EditProduct";
 import Home from "./screens/Home";
+import Login from "./screens/Login";
 
 function App() {
   const [view, setView] = useState("home");
   const [productId, setProductId] = useState(0);
+
   return (
     <>
       <Header view={view} setView={setView} />
@@ -28,6 +30,7 @@ function App() {
         {view === "editProduct" && (
           <EditProduct setView={setView} productId={productId} />
         )}
+        {view === "login" && <Login setView={setView} />}
       </main>
       <Footer />
     </>

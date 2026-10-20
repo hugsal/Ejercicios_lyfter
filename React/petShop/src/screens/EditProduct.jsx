@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useProductsStore } from "../store/productsStore";
 import ProductForm from "../components/ProductForm";
+import apiServices from "../api/apiServices";
 
 function EditProduct({ setView, productId }) {
   const products = useProductsStore((state) => state.products);
-  const updateProduct = useProductsStore((state) => state.updateProduct);
+  const setProducts = useProductsStore((state) => state.setProducts);
 
   const product = products.find((product) => product.id === productId);
 
@@ -27,17 +28,23 @@ function EditProduct({ setView, productId }) {
           className="edit-product-form"
           initialValues={{
             id: product.id,
-            nombre: product.nombre,
-            descripcion: product.descripcion,
-            categoria: product.categoria,
-            precio: product.precio,
-            imagen: product.imagen,
+            name: product.name,
+            description: product.description,
+            category: product.category,
+            price: product.price,
+            image: product.image,
             stock: product.stock,
           }}
-          onSubmit={(values) => {
-            updateProduct(productId, values);
-            alert("Producto actualizado correctamente");
-            setView("administration");
+          onSubmit={async (values) => {
+            try {
+              await apiServices.updateProduct(productId, values);
+              alert("Producto actualizado correctamente");
+              const products = await apiServices.getProducts();
+              setProducts(products);
+              setView("administration");
+            } catch (error) {
+              alert(error.message);
+            }
           }}
           errorMessage="Por favor completa todos los campos antes de guardar los cambios."
         >
