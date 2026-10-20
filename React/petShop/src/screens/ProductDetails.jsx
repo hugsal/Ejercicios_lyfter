@@ -65,7 +65,6 @@ function ProductDetails() {
         <div className="product-detail-price">${product.price}</div>
         <div className="product-detail-category">{product.category}</div>
         <p className="product-detail-description">{product.description}</p>
-
         <div className="product-detail-actions">
           <button
             type="button"
