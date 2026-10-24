@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useLoginStore } from "../store/loginStore";
+import { useAuth } from "../contexts/auth/useAuth";
 
 function Home() {
-  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
+  const { isLoggedIn } = useAuth();
   return (
     <>
       <section className="hero">

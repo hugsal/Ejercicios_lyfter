@@ -1,8 +1,7 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { useApi } from "../hooks/useApi";
 import ProductForm from "../components/ProductForm";
 import apiServices from "../api/apiServices";
-import { useParams } from "react-router";
 import Loading from "../components/Loading";
 
 function EditProduct() {

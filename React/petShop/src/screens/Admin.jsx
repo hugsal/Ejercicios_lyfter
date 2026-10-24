@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import Loading from "../components/Loading";
 import ProductForm from "../components/ProductForm";
 import apiServices from "../api/apiServices";

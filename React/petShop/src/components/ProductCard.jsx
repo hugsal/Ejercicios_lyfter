@@ -1,8 +1,8 @@
-import { Link } from "react-router";
-import { useLoginStore } from "../store/loginStore";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/auth/useAuth";
 
 function ProductCard({ product }) {
-  const { isLoggedIn } = useLoginStore();
+  const { isLoggedIn } = useAuth();
   return (
     <article className="product-card">
       <img src={product.image} alt={product.name} className="product-image" />

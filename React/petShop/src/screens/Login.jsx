@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useLoginStore } from "../store/loginStore";
 import apiServices from "../api/apiServices";
+import { useAuth } from "../contexts/auth/useAuth";
+import { useCart } from "../contexts/cart/useCart";
 
 function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const login = useLoginStore((state) => state.login);
+  const { login } = useAuth();
+  const { setCartData } = useCart();
 
   const onSubmit = async (values) => {
     const { email, password } = values;
@@ -22,6 +24,10 @@ function Login() {
       const { role, userName: name } = user;
       login({ role, userName: name });
       localStorage.setItem("user", JSON.stringify(user));
+      const cart = await apiServices.getActiveCart();
+      if (cart) {
+        setCartData(cart);
+      }
       navigate("/productos");
     } catch (error) {
       setError("email o contraseña incorrectos");

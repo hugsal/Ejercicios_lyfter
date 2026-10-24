@@ -53,14 +53,29 @@ async function createSale(saleData) {
   return data;
 }
 
+async function updateItemCart(productId, quantity = 1) {
+  const { data } = await axiosInstance.put(`/carts/items`, {
+    productId,
+    quantity,
+  });
+  return data;
+}
+
+async function deleteItemCart(productId) {
+  const { data } = await axiosInstance.delete(`/carts/items/${productId}`);
+  return data;
+}
+
 export default {
   addToCart,
   createSale,
+  deleteItemCart,
   getProducts,
   getProductById,
   getActiveCart,
   createProduct,
   updateProduct,
+  updateItemCart,
   deleteProduct,
   getMe,
   loginUser,

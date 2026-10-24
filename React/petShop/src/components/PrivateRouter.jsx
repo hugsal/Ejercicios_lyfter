@@ -1,8 +1,8 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useLoginStore } from "../store/loginStore";
+import { useAuth } from "../contexts/auth/useAuth";
 
 function PrivateRouter() {
-  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
+  const { isLoggedIn } = useAuth();
 
   return isLoggedIn ? <Outlet /> : <Navigate to="/" />;
 }

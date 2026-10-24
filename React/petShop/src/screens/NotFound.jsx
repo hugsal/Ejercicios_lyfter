@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useLoginStore } from "../store/loginStore";
+import { useAuth } from "../contexts/auth/useAuth";
 
 function NotFound() {
   const navigate = useNavigate();
-  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
+  const { isLoggedIn } = useAuth();
 
   return (
     <section className="not-found-screen" aria-labelledby="not-found-title">

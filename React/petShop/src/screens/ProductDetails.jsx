@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router-dom";
 import { useApi } from "../hooks/useApi";
 import apiServices from "../api/apiServices";
 import Loading from "../components/Loading";
+import { useCart } from "../contexts/cart/useCart";
 
 function ProductDetails() {
   const { id } = useParams();
+  const { setCartData } = useCart();
   const {
     data: product,
     loading,
@@ -45,6 +46,10 @@ function ProductDetails() {
     try {
       await apiServices.addToCart(Number(id));
       alert("Producto agregado al carrito");
+      const cart = await apiServices.getActiveCart();
+      if (cart) {
+        setCartData(cart);
+      }
     } catch (error) {
       console.error(error.message);
     }

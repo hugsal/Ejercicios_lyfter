@@ -1,12 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useLoginStore } from "../store/loginStore";
+import { useAuth } from "../contexts/auth/useAuth";
+import { useCart } from "../contexts/cart/useCart";
 
 function Header() {
   const navigate = useNavigate();
-  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
-  const role = useLoginStore((state) => state.role);
-  const logout = useLoginStore((state) => state.logout);
-  const userName = useLoginStore((state) => state.userName);
+  const { isLoggedIn, role, logout, userName } = useAuth();
+  const { cartItemsCount, cart } = useCart();
   const isAdmin = role === "admin";
 
   return (
@@ -49,16 +48,32 @@ function Header() {
             </NavLink>
           </li>
           {isLoggedIn && (
-            <li>
-              <NavLink
-                to="/checkout"
-                style={({ isActive }) => ({
-                  fontWeight: isActive ? "bold" : "normal",
-                })}
-              >
-                Checkout
-              </NavLink>
-            </li>
+            <>
+              <li>
+                <NavLink
+                  to="/carrito" // O la ruta que utilices, por ejemplo "/checkout"
+                  className="cart-nav-link"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? "bold" : "normal",
+                  })}
+                >
+                  <div className="cart-icon-wrapper">
+                    <span>Carrito</span>
+                    <span className="cart-badge">{cartItemsCount}</span>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/checkout"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? "bold" : "normal",
+                  })}
+                >
+                  Checkout
+                </NavLink>
+              </li>
+            </>
           )}
           <li>
             <NavLink
@@ -88,7 +103,6 @@ function Header() {
               className="btn-login"
               onClick={() => {
                 if (isLoggedIn) {
-                  localStorage.clear();
                   logout();
                   navigate("/");
                 } else {

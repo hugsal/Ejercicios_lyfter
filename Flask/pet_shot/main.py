@@ -340,6 +340,42 @@ def add_to_cart():
     return {"cart": updated_cart}, 200
 
 
+@app.route("/carts/items", methods=["PUT"])
+@validate_roles(["admin", "client"])
+def update_cart_item():
+    data = request.json or {}
+    product_id = data.get("productId")
+    quantity = data.get("quantity")
+
+    if not product_id:
+        abort(400, "El productId es obligatorio")
+    if quantity is None or not isinstance(quantity, int):
+        abort(400, "La cantidad debe ser un número entero")
+    if quantity < 0:
+        abort(400, "La cantidad no puede ser negativa")
+
+    user_id = request.user_payload["id"]
+
+    db = get_db()
+    product = ProductRepository.get_product_by_id(db, product_id)
+    if not product and quantity > 0:
+        abort(404, "El producto especificado no existe")
+
+    active_cart = CartRepository.get_or_create_active_cart(db, user_id)
+    cart_items = active_cart.get("items", []) if active_cart else []
+    item_in_cart = any(
+        str(item.get("productId")) == str(product_id) or str(item.get("id")) == str(product_id)
+        for item in cart_items
+    )
+    if not item_in_cart:
+        abort(404, "El producto especificado no se encuentra en el carrito")
+
+    updated_cart = CartRepository.add_or_update_item(
+        db, active_cart["id"], product_id, quantity
+    )
+    return {"cart": updated_cart}, 200
+
+
 @app.route("/carts/items/<product_id>", methods=["DELETE"])
 @validate_roles(["admin", "client"])
 def remove_from_cart(product_id):

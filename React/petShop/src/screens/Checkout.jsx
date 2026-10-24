@@ -1,21 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { useApi } from "../hooks/useApi";
 import apiServices from "../api/apiServices";
 import Loading from "../components/Loading";
+import { useCart } from "../contexts/cart/useCart";
+import { useApi } from "../hooks/useApi";
 
 function Checkout() {
   const navigate = useNavigate();
-  const {
-    data: cart = {},
-    loading,
-    error,
-  } = useApi(() => apiServices.getActiveCart());
+  const { fetchActiveCart } = useCart();
+  const { data: cart, loading } = useApi(() => apiServices.getActiveCart());
 
   if (loading) return <Loading />;
 
-  if (cart.items && cart.items.length === 0) {
+  if (cart?.items && cart?.items.length === 0) {
     return (
       <section className="empty-state">
         <svg
@@ -47,30 +45,33 @@ function Checkout() {
   });
 
   return (
-    <div className="checkout-layout">
-      <section className="checkout-card">
-        <h2>Información de compra</h2>
-        <Formik
-          initialValues={{
-            fullName: "",
-            email: "",
-            billingAddress: "",
-            phone: "",
-            paymentReference: "SINPE",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={async (values) => {
-            try {
-              await apiServices.createSale({ cartId, ...values });
-              alert("Compra realizada exitosamente");
-              navigate("/productos");
-            } catch (error) {
-              console.error(error.message);
-            }
-          }}
-        >
-          {({ errors, submitCount }) => (
-            <Form id="checkoutForm">
+    <Formik
+      initialValues={{
+        fullName: "",
+        email: "",
+        billingAddress: "",
+        phone: "",
+        paymentReference: "SINPE",
+      }}
+      validationSchema={validationSchema}
+      onSubmit={async (values) => {
+        console.log(values);
+        try {
+          await apiServices.createSale({ cartId, ...values });
+          alert("Gracias por tu compra!");
+          fetchActiveCart();
+          navigate("/productos");
+        } catch (error) {
+          alert(error.message);
+        }
+      }}
+    >
+      {({ errors, submitCount }) => (
+        <Form>
+          <div className="checkout-layout">
+            <section className="checkout-card">
+              <h2>Información de compra</h2>
+
               <div className="form-group">
                 <label htmlFor="fullName">Nombre completo</label>
                 <Field
@@ -120,45 +121,45 @@ function Checkout() {
               <p className="checkout-note">
                 Esta información se utilizará para completar la compra.
               </p>
-            </Form>
-          )}
-        </Formik>
-      </section>
+            </section>
 
-      <section className="checkout-card">
-        <h2>Resumen del pedido</h2>
+            <section className="checkout-card">
+              <h2>Resumen del pedido</h2>
 
-        <div className="order-summary-list" id="cartContent">
-          {cart.items.map(({ product, quantity }) => (
-            <div key={product.id} className="order-summary-item">
-              <div className="order-item-info">
-                <span className="order-item-title">{product.name}</span>
-                <span className="order-item-detail">
-                  {quantity} x {product.price}
-                </span>
+              <div className="order-summary-list" id="cartContent">
+                {cart.items.map(({ product, quantity, subtotal }) => (
+                  <div key={product.id} className="order-summary-item">
+                    <div className="order-item-info">
+                      <span className="order-item-title">{product.name}</span>
+                      <span className="order-item-detail">
+                        {quantity} x {product.price}
+                      </span>
+                    </div>
+                    <span className="order-item-price">${subtotal}</span>
+                  </div>
+                ))}
               </div>
-              <span className="order-item-price">${product.price}</span>
-            </div>
-          ))}
-        </div>
 
-        <hr className="order-divider" />
+              <hr className="order-divider" />
 
-        <div className="order-total-row">
-          <span className="order-total-label">Total:</span>
-          <span className="order-total-amount">${totalAmount}</span>
-        </div>
+              <div className="order-total-row">
+                <span className="order-total-label">Total:</span>
+                <span className="order-total-amount">${totalAmount}</span>
+              </div>
 
-        <div className="checkout-actions">
-          <button type="submit" form="checkoutForm" className="btn-primary">
-            Confirmar compra
-          </button>
-          <Link to="/productos" className="btn-secondary">
-            Cancelar
-          </Link>
-        </div>
-      </section>
-    </div>
+              <div className="checkout-actions">
+                <button type="submit" className="btn-primary">
+                  Confirmar compra
+                </button>
+                <Link to="/productos" className="btn-secondary">
+                  Cancelar
+                </Link>
+              </div>
+            </section>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 }
 

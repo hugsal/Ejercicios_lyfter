@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useLoginStore } from "./store/loginStore";
 import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -15,11 +14,12 @@ import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
 import Checkout from "./screens/Checkout";
+import Cart from "./screens/Cart";
+import Contacto from "./screens/Contacto";
+import { useAuth } from "./contexts/auth/useAuth";
 
 function App() {
-  const isLoadingAuth = useLoginStore((state) => state.isLoadingAuth);
-  const isLogged = useLoginStore((state) => state.isLogged);
-  const role = useLoginStore((state) => state.role);
+  const { isLogged, role, isLoadingAuth } = useAuth();
 
   useEffect(() => {
     isLogged();
@@ -34,12 +34,14 @@ function App() {
         <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/productos" element={<Products />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/" element={<Home />} />
           <Route element={<PublicRouter />}>
-            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
           </Route>
           <Route element={<PrivateRouter />}>
             <Route path="/productos/:id" element={<ProductDetails />} />
+            <Route path="/carrito" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             {role === "admin" && (
               <>
