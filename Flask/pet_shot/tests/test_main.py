@@ -25,6 +25,7 @@ from main import (
     get_carts,
     get_active_cart,
     add_to_cart,
+    update_cart_item,
     remove_from_cart,
     create_sale,
     get_invoices,
@@ -383,6 +384,61 @@ class TestCartMethods(unittest.TestCase):
             res, code = remove_from_cart("p1")
             self.assertEqual(code, 200)
             self.assertEqual(res["cart"]["items"], [])
+
+    @patch("validateRoles.jwt_manager")
+    @patch("main.CartRepository")
+    @patch("main.ProductRepository")
+    @patch("main.get_db")
+    def test_update_cart_item_success(self, mock_get_db, mock_prod_repo, mock_cart_repo, mock_jwt):
+        mock_jwt.decode.return_value = {"id": "u1", "role": "client"}
+        mock_prod_repo.get_product_by_id.return_value = {"id": "p1"}
+        mock_cart_repo.get_or_create_active_cart.return_value = {
+            "id": "c1",
+            "items": [{"productId": "p1", "quantity": 1}]
+        }
+        mock_cart_repo.add_or_update_item.return_value = {
+            "id": "c1",
+            "items": [{"productId": "p1", "quantity": 5}]
+        }
+
+        with app.test_request_context(
+            json={"productId": "p1", "quantity": 5, "userId": "u1"},
+            headers=self.auth_headers
+        ):
+            res, code = update_cart_item()
+            self.assertEqual(code, 200)
+            self.assertEqual(res["cart"]["items"][0]["quantity"], 5)
+
+    @patch("validateRoles.jwt_manager")
+    @patch("main.get_db")
+    def test_update_cart_item_forbidden_other_user(self, mock_get_db, mock_jwt):
+        mock_jwt.decode.return_value = {"id": "u1", "role": "client"}
+
+        with app.test_request_context(
+            json={"productId": "p1", "quantity": 5, "userId": "u2"},
+            headers=self.auth_headers
+        ):
+            with self.assertRaises(Forbidden):
+                update_cart_item()
+
+    @patch("validateRoles.jwt_manager")
+    @patch("main.CartRepository")
+    @patch("main.ProductRepository")
+    @patch("main.get_db")
+    def test_update_cart_item_not_in_cart(self, mock_get_db, mock_prod_repo, mock_cart_repo, mock_jwt):
+        mock_jwt.decode.return_value = {"id": "u1", "role": "client"}
+        mock_prod_repo.get_product_by_id.return_value = {"id": "p1"}
+        mock_cart_repo.get_or_create_active_cart.return_value = {
+            "id": "c1",
+            "items": [{"productId": "p2", "quantity": 1}]
+        }
+
+        with app.test_request_context(
+            json={"productId": "p1", "quantity": 5},
+            headers=self.auth_headers
+        ):
+            with self.assertRaises(NotFound):
+                update_cart_item()
 
 
 class TestSalesAndInvoiceMethods(unittest.TestCase):

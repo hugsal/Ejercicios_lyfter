@@ -101,7 +101,16 @@ class CartRepository:
 
     @staticmethod
     def add_or_update_item(db, cart_id, product_id, quantity):
-        cart = db.get(Cart, int(cart_id))
+        try:
+            cart_id = int(cart_id)
+        except (ValueError, TypeError):
+            pass
+        try:
+            product_id = int(product_id)
+        except (ValueError, TypeError):
+            pass
+
+        cart = db.get(Cart, cart_id)
         if not cart:
             return None
 
@@ -128,6 +137,15 @@ class CartRepository:
 
     @staticmethod
     def remove_item(db, cart_id, product_id):
+        try:
+            cart_id = int(cart_id)
+        except (ValueError, TypeError):
+            pass
+        try:
+            product_id = int(product_id)
+        except (ValueError, TypeError):
+            pass
+
         stmt = select(CartItem).where(
             CartItem.fk_cart_id == cart_id, CartItem.fk_product_id == product_id
         )

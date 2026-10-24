@@ -1,19 +1,8 @@
-import { useEffect } from "react";
-import { useLoginStore } from "../store/loginStore";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/auth/useAuth";
 
-function Home({ setView }) {
-  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
-  const isLoadingAuth = useLoginStore((state) => state.isLoadingAuth);
-  const isLogged = useLoginStore((state) => state.isLogged);
-
-  useEffect(() => {
-    isLogged();
-  }, []);
-
-  if (isLoadingAuth) {
-    return <div>Cargando...</div>;
-  }
-
+function Home() {
+  const { isLoggedIn } = useAuth();
   return (
     <>
       <section className="hero">
@@ -26,12 +15,15 @@ function Home({ setView }) {
           Explora nuestro catálogo para encontrar camas, juguetes, accesorios y
           más.
         </p>
-        <button
-          className="btn-primary"
-          onClick={() => setView(isLoggedIn ? "products" : "login")}
-        >
-          {isLoggedIn ? "Ver productos" : "Iniciar sesión"}
-        </button>
+        {isLoggedIn ? (
+          <Link to="/productos" className="btn-primary">
+            Ver productos
+          </Link>
+        ) : (
+          <Link to="/login" className="btn-primary">
+            Iniciar Sesion
+          </Link>
+        )}
       </section>
 
       <section className="info-section">
