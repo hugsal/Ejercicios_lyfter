@@ -19,7 +19,7 @@ function NotFound() {
       </svg>
 
       <h1 id="not-found-title">Página no encontrada</h1>
-      <p>La ruta solicitada no existe o ha sido movida.</p>
+      <p>La página que estás buscando no existe o ha sido movida.</p>
       <button
         className="not-found-button"
         type="button"

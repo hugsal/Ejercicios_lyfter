@@ -11,3 +11,6 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 REDIS_HOST = os.getenv("REDIS_HOST", "")
 REDIS_PORT = os.getenv("REDIS_PORT", "")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
+
+MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")

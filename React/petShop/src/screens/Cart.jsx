@@ -41,7 +41,7 @@ function Cart() {
             strokeLinecap="round"
           />
         </svg>
-        <h2>Tu carrito está vacío</h2>
+        <h2>Tu carrito está vacío.</h2>
         <p>Agrega productos desde el catálogo.</p>
         <NavLink to="/productos" className="btn-secondary">
           Ver productos
@@ -53,10 +53,8 @@ function Cart() {
   const handleUpdateItemCart = async (productId, quantity) => {
     try {
       await apiServices.updateItemCart(productId, quantity);
-      alert("Producto actualizado en el carrito");
       fetchActiveCart();
     } catch (error) {
-      console.log(error);
       alert("Error al actualizar el producto en el carrito");
     }
   };
@@ -67,7 +65,6 @@ function Cart() {
       alert("Producto eliminado del carrito");
       fetchActiveCart();
     } catch (error) {
-      console.log(error);
       alert("Error al eliminar el producto del carrito");
     }
   };
@@ -137,7 +134,7 @@ function Cart() {
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                   </svg>
-                  Eliminar
+                  Quitar
                 </button>
               </div>
             </article>
@@ -151,7 +148,7 @@ function Cart() {
             </span>
           </div>
           <NavLink to="/checkout" className="btn-primary">
-            Continuar al checkout
+            Ir al checkout
           </NavLink>
         </aside>
       </div>

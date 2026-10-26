@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from flask import Flask, request, abort
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
+from flask_mailman import Mail, EmailMessage
 
 from database import engine, BaseDb, SessionLocal
 from entities.userEntity import User
@@ -24,6 +25,8 @@ from validateRoles import validate_roles
 from extension import jwt_manager
 from cacheManager import cache_manager
 
+from config import MAIL_USERNAME, MAIL_PASSWORD
+
 app = Flask(__name__)
 
 CORS(app, resources={r"/*": {
@@ -34,6 +37,15 @@ CORS(app, resources={r"/*": {
     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"]
 }})
+
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = ('Paw Store', MAIL_USERNAME)
+
+mail = Mail(app)
 
 @app.errorhandler(HTTPException)
 def handle_http_exception(e):
@@ -70,6 +82,30 @@ def generate_tokens(user_id, role):
     )
     return access_token, refresh_token
 
+def send_email(user_id, items):
+    db = get_db()
+    user = UserRepository.get_user_by_id(db, user_id)
+    recipient = user["email"]
+    subject = "Confirmación de pedido"
+    body = "Resumen de tu compra: \n\n"
+    
+    for item in items:        
+        body += f"{item['product']['name']} - Cantidad: {item['quantity']}\n"
+
+    body += "\nGracias por tu compra!"
+
+    try:
+        msg = EmailMessage(
+            subject=subject,
+            body=body,
+            to=[recipient]
+        )
+        msg.send()
+        
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 # ==========================================================
 # 🔐 MÓDULO DE USUARIOS Y AUTENTICACIÓN
@@ -453,6 +489,8 @@ def create_sale():
         db, invoice["id"], total_amount
     )
     CartRepository.update_cart_status(db, cart["id"], "completed")
+
+    send_email(user_id, cart["items"])
 
     cache_manager.invalidate_products()
     cache_manager.invalidate_invoices()

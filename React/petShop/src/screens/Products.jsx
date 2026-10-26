@@ -6,7 +6,7 @@ import apiServices from "../api/apiServices";
 function Products() {
   const { data: products, loading, error } = useApi(apiServices.getProducts);
 
-  if (loading) return <Loading />;
+  if (loading || products === null) return <Loading />;
 
   if (products.length === 0) {
     return (

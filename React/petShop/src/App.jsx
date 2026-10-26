@@ -50,7 +50,6 @@ function App() {
               </>
             )}
           </Route>
-          {/* <Route path="/checkout" element={<Checkout />} /> */}
         </Routes>
       </main>
       <Footer />

@@ -45,13 +45,12 @@ function ProductDetails() {
 
     try {
       await apiServices.addToCart(Number(id));
-      alert("Producto agregado al carrito");
       const cart = await apiServices.getActiveCart();
       if (cart) {
         setCartData(cart);
       }
     } catch (error) {
-      console.error(error.message);
+      alert("No se pudo agregar el producto al carrito");
     }
   };
 

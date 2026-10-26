@@ -1,19 +1,33 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import apiServices from "../api/apiServices";
-import Loading from "../components/Loading";
 import { useCart } from "../contexts/cart/useCart";
-import { useApi } from "../hooks/useApi";
+import Loading from "../components/Loading";
 
 function Checkout() {
-  const navigate = useNavigate();
-  const { fetchActiveCart } = useCart();
-  const { data: cart, loading } = useApi(() => apiServices.getActiveCart());
+  const [success, setSuccess] = useState(false);
+  const { cart, loadingCart, fetchActiveCart } = useCart();
 
-  if (loading) return <Loading />;
+  if (success)
+    return (
+      <section className="empty-state" aria-labelledby="not-found-title">
+        <h1>¡Gracias por tu compra!</h1>
+        <p>
+          Hemos enviado un correo de confirmación con los detalles de tu pedido.
+        </p>
+        <Link className="btn-secondary" to="/productos">
+          Volver al catálogo
+        </Link>
+      </section>
+    );
 
-  if (cart?.items && cart?.items.length === 0) {
+  if (loadingCart || cart === null) {
+    return <Loading />;
+  }
+
+  if (cart.items.length === 0) {
     return (
       <section className="empty-state">
         <svg
@@ -45,121 +59,125 @@ function Checkout() {
   });
 
   return (
-    <Formik
-      initialValues={{
-        fullName: "",
-        email: "",
-        billingAddress: "",
-        phone: "",
-        paymentReference: "SINPE",
-      }}
-      validationSchema={validationSchema}
-      onSubmit={async (values) => {
-        console.log(values);
-        try {
-          await apiServices.createSale({ cartId, ...values });
-          alert("Gracias por tu compra!");
-          fetchActiveCart();
-          navigate("/productos");
-        } catch (error) {
-          alert(error.message);
-        }
-      }}
-    >
-      {({ errors, submitCount }) => (
-        <Form>
-          <div className="checkout-layout">
-            <section className="checkout-card">
-              <h2>Información de compra</h2>
+    <>
+      <h1 className="catalog-title">Checkout</h1>
 
-              <div className="form-group">
-                <label htmlFor="fullName">Nombre completo</label>
-                <Field
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  placeholder="Ingresa tu nombre completo"
-                />
-              </div>
+      <Formik
+        initialValues={{
+          fullName: "",
+          email: "",
+          billingAddress: "",
+          phone: "",
+          paymentReference: "SINPE",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={async (values) => {
+          try {
+            await apiServices.createSale({ cartId, ...values });
+            setSuccess(true);
+            fetchActiveCart();
+          } catch (error) {
+            alert(
+              "Ocurrió un problema al procesar tu compra. Por favor intenta de nuevo.",
+            );
+          }
+        }}
+      >
+        {({ errors, submitCount }) => (
+          <Form>
+            <div className="checkout-layout">
+              <section className="checkout-card">
+                <h2>Información de compra</h2>
 
-              <div className="form-group">
-                <label htmlFor="email">Correo electrónico</label>
-                <Field
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="correo@ejemplo.com"
-                />
-              </div>
+                <div className="form-group">
+                  <label htmlFor="fullName">Nombre completo</label>
+                  <Field
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Ingresa tu nombre completo"
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="address">Dirección</label>
-                <Field
-                  type="text"
-                  id="address"
-                  name="billingAddress"
-                  placeholder="Dirección de entrega"
-                />
-              </div>
+                <div className="form-group">
+                  <label htmlFor="email">Correo electrónico</label>
+                  <Field
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="correo@ejemplo.com"
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="phone">Teléfono</label>
-                <Field
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="+506 0000-0000"
-                />
-              </div>
-              {submitCount > 0 && Object.keys(errors).length > 0 && (
+                <div className="form-group">
+                  <label htmlFor="address">Dirección de envío</label>
+                  <Field
+                    type="text"
+                    id="address"
+                    name="billingAddress"
+                    placeholder="Dirección"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone">Teléfono</label>
+                  <Field
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="+506 0000-0000"
+                  />
+                </div>
+                {submitCount > 0 && Object.keys(errors).length > 0 && (
+                  <p className="checkout-note">
+                    Completa todos los campos correctamente para procesar su
+                    compra.
+                  </p>
+                )}
+
                 <p className="checkout-note">
-                  Completa todos los campos correctamente para procesar su
-                  compra.
+                  Esta información se utilizará para completar la compra.
                 </p>
-              )}
+              </section>
 
-              <p className="checkout-note">
-                Esta información se utilizará para completar la compra.
-              </p>
-            </section>
+              <section className="checkout-card">
+                <h2>Resumen del pedido</h2>
 
-            <section className="checkout-card">
-              <h2>Resumen del pedido</h2>
-
-              <div className="order-summary-list" id="cartContent">
-                {cart.items.map(({ product, quantity, subtotal }) => (
-                  <div key={product.id} className="order-summary-item">
-                    <div className="order-item-info">
-                      <span className="order-item-title">{product.name}</span>
-                      <span className="order-item-detail">
-                        {quantity} x {product.price}
-                      </span>
+                <div className="order-summary-list" id="cartContent">
+                  {cart.items.map(({ product, quantity, subtotal }) => (
+                    <div key={product.id} className="order-summary-item">
+                      <div className="order-item-info">
+                        <span className="order-item-title">{product.name}</span>
+                        <span className="order-item-detail">
+                          {quantity} x {product.price}
+                        </span>
+                      </div>
+                      <span className="order-item-price">${subtotal}</span>
                     </div>
-                    <span className="order-item-price">${subtotal}</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <hr className="order-divider" />
+                <hr className="order-divider" />
 
-              <div className="order-total-row">
-                <span className="order-total-label">Total:</span>
-                <span className="order-total-amount">${totalAmount}</span>
-              </div>
+                <div className="order-total-row">
+                  <span className="order-total-label">Total:</span>
+                  <span className="order-total-amount">${totalAmount}</span>
+                </div>
 
-              <div className="checkout-actions">
-                <button type="submit" className="btn-primary">
-                  Confirmar compra
-                </button>
-                <Link to="/productos" className="btn-secondary">
-                  Cancelar
-                </Link>
-              </div>
-            </section>
-          </div>
-        </Form>
-      )}
-    </Formik>
+                <div className="checkout-actions">
+                  <button type="submit" className="btn-primary">
+                    Confirmar compra
+                  </button>
+                  <Link to="/productos" className="btn-secondary">
+                    Cancelar
+                  </Link>
+                </div>
+              </section>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 }
 
