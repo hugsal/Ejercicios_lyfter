@@ -1,29 +1,12 @@
-import { useEffect, useState } from "react";
-import { useProductsStore } from "../store/productsStore";
+import Loading from "../components/Loading";
 import ProductCard from "../components/ProductCard";
+import { useApi } from "../hooks/useApi";
 import apiServices from "../api/apiServices";
 
-function Products({ setView, setProductId }) {
-  const [loading, setLoading] = useState(true);
-  const setProducts = useProductsStore((state) => state.setProducts);
-  const products = useProductsStore((state) => state.products);
+function Products() {
+  const { data: products, loading, error } = useApi(apiServices.getProducts);
 
-  useEffect(() => {
-    const getProducts = async () => {
-      const products = await apiServices.getProducts();
-      setProducts(products);
-      setLoading(false);
-    };
-    getProducts();
-  }, []);
-
-  if (loading) {
-    return (
-      <section className="empty-state">
-        <h3>Cargando productos...</h3>
-      </section>
-    );
-  }
+  if (loading || products === null) return <Loading />;
 
   if (products.length === 0) {
     return (
@@ -52,12 +35,7 @@ function Products({ setView, setProductId }) {
       <h2 className="catalog-title">Catálogo de productos</h2>
       <section className="products-grid">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            setProductId={setProductId}
-            setView={setView}
-          />
+          <ProductCard key={product.id} product={product} />
         ))}
       </section>
     </>

@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from flask import Flask, request, abort
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
+from flask_mailman import Mail, EmailMessage
 
 from database import engine, BaseDb, SessionLocal
 from entities.userEntity import User
@@ -24,6 +25,8 @@ from validateRoles import validate_roles
 from extension import jwt_manager
 from cacheManager import cache_manager
 
+from config import MAIL_USERNAME, MAIL_PASSWORD
+
 app = Flask(__name__)
 
 CORS(app, resources={r"/*": {
@@ -34,6 +37,15 @@ CORS(app, resources={r"/*": {
     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"]
 }})
+
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = ('Paw Store', MAIL_USERNAME)
+
+mail = Mail(app)
 
 @app.errorhandler(HTTPException)
 def handle_http_exception(e):
@@ -70,6 +82,30 @@ def generate_tokens(user_id, role):
     )
     return access_token, refresh_token
 
+def send_email(user_id, items):
+    db = get_db()
+    user = UserRepository.get_user_by_id(db, user_id)
+    recipient = user["email"]
+    subject = "Confirmación de pedido"
+    body = "Resumen de tu compra: \n\n"
+    
+    for item in items:        
+        body += f"{item['product']['name']} - Cantidad: {item['quantity']}\n"
+
+    body += "\nGracias por tu compra!"
+
+    try:
+        msg = EmailMessage(
+            subject=subject,
+            body=body,
+            to=[recipient]
+        )
+        msg.send()
+        
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 # ==========================================================
 # 🔐 MÓDULO DE USUARIOS Y AUTENTICACIÓN
@@ -340,6 +376,42 @@ def add_to_cart():
     return {"cart": updated_cart}, 200
 
 
+@app.route("/carts/items", methods=["PUT"])
+@validate_roles(["admin", "client"])
+def update_cart_item():
+    data = request.json or {}
+    product_id = data.get("productId")
+    quantity = data.get("quantity")
+
+    if not product_id:
+        abort(400, "El productId es obligatorio")
+    if quantity is None or not isinstance(quantity, int):
+        abort(400, "La cantidad debe ser un número entero")
+    if quantity < 0:
+        abort(400, "La cantidad no puede ser negativa")
+
+    user_id = request.user_payload["id"]
+
+    db = get_db()
+    product = ProductRepository.get_product_by_id(db, product_id)
+    if not product and quantity > 0:
+        abort(404, "El producto especificado no existe")
+
+    active_cart = CartRepository.get_or_create_active_cart(db, user_id)
+    cart_items = active_cart.get("items", []) if active_cart else []
+    item_in_cart = any(
+        str(item.get("productId")) == str(product_id) or str(item.get("id")) == str(product_id)
+        for item in cart_items
+    )
+    if not item_in_cart:
+        abort(404, "El producto especificado no se encuentra en el carrito")
+
+    updated_cart = CartRepository.add_or_update_item(
+        db, active_cart["id"], product_id, quantity
+    )
+    return {"cart": updated_cart}, 200
+
+
 @app.route("/carts/items/<product_id>", methods=["DELETE"])
 @validate_roles(["admin", "client"])
 def remove_from_cart(product_id):
@@ -417,6 +489,8 @@ def create_sale():
         db, invoice["id"], total_amount
     )
     CartRepository.update_cart_status(db, cart["id"], "completed")
+
+    send_email(user_id, cart["items"])
 
     cache_manager.invalidate_products()
     cache_manager.invalidate_invoices()

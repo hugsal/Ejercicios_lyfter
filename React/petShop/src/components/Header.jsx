@@ -1,15 +1,20 @@
-import { useLoginStore } from "../store/loginStore";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/auth/useAuth";
+import { useCart } from "../contexts/cart/useCart";
 
-function Header({ view, setView }) {
-  const isLoggedIn = useLoginStore((state) => state.isLoggedIn);
-  const role = useLoginStore((state) => state.role);
-  const logout = useLoginStore((state) => state.logout);
-  const userName = useLoginStore((state) => state.userName);
+function Header() {
+  const navigate = useNavigate();
+  const { isLoggedIn, role, logout, userName } = useAuth();
+  const { cartItemsCount, cart } = useCart();
   const isAdmin = role === "admin";
 
   return (
     <header className="header">
-      <button type="button" className="logo" onClick={() => setView("home")}>
+      <button
+        type="button"
+        className="logo"
+        onClick={() => navigate(isLoggedIn ? "/productos" : "/")}
+      >
         PawStore
       </button>
       {isLoggedIn && (
@@ -20,55 +25,76 @@ function Header({ view, setView }) {
 
       <nav>
         <ul className="nav-links">
+          {!isLoggedIn && (
+            <li>
+              <NavLink
+                to="/"
+                style={({ isActive }) => ({
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
+              >
+                Inicio
+              </NavLink>
+            </li>
+          )}
           <li>
-            <button
-              type="button"
-              className={view === "home" ? "active" : ""}
-              aria-current={view === "home" ? "page" : undefined}
-              onClick={() => setView("home")}
-            >
-              Inicio
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className={
-                view === "products" || view === "productDetails" ? "active" : ""
-              }
-              aria-current={
-                view === "products" || view === "productDetails"
-                  ? "page"
-                  : undefined
-              }
-              onClick={() => setView("products")}
+            <NavLink
+              to="/productos"
+              style={({ isActive }) => ({
+                fontWeight: isActive ? "bold" : "normal",
+              })}
             >
               Productos
-            </button>
+            </NavLink>
           </li>
+          {isLoggedIn && (
+            <>
+              <li>
+                <NavLink
+                  to="/carrito" // O la ruta que utilices, por ejemplo "/checkout"
+                  className="cart-nav-link"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? "bold" : "normal",
+                  })}
+                >
+                  <div className="cart-icon-wrapper">
+                    <span>Carrito</span>
+                    <span className="cart-badge">{cartItemsCount}</span>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/checkout"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? "bold" : "normal",
+                  })}
+                >
+                  Checkout
+                </NavLink>
+              </li>
+            </>
+          )}
           <li>
-            <a href="#">Contacto</a>
+            <NavLink
+              to="/contacto"
+              style={({ isActive }) => ({
+                fontWeight: isActive ? "bold" : "normal",
+              })}
+            >
+              Contacto
+            </NavLink>
           </li>
           {isAdmin && (
             <li>
-              <button
-                type="button"
-                className={
-                  view === "administration" || view === "editProduct"
-                    ? "active"
-                    : ""
-                }
-                aria-current={
-                  view === "administration" || view === "editProduct"
-                    ? "page"
-                    : undefined
-                }
-                onClick={() => {
-                  setView("administration");
-                }}
+              <NavLink
+                to="/admin"
+                style={({ isActive }) => ({
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
               >
                 Administración
-              </button>
+              </NavLink>
             </li>
           )}
           <li>
@@ -77,11 +103,10 @@ function Header({ view, setView }) {
               className="btn-login"
               onClick={() => {
                 if (isLoggedIn) {
-                  localStorage.clear();
                   logout();
-                  setView("home");
+                  navigate("/");
                 } else {
-                  setView("login");
+                  navigate("/login");
                 }
               }}
             >

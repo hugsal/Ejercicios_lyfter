@@ -1,75 +1,79 @@
-import { useProductsStore } from "../store/productsStore";
+import { Link } from "react-router-dom";
+import Loading from "../components/Loading";
 import ProductForm from "../components/ProductForm";
 import apiServices from "../api/apiServices";
+import { useApi } from "../hooks/useApi";
 
-function Admin({ setView, setProductId }) {
-  const products = useProductsStore((state) => state.products);
-  const setProducts = useProductsStore((state) => state.setProducts);
+function Admin() {
+  const { data: products, loading, refetch } = useApi(apiServices.getProducts);
+
+  if (loading) return <Loading />;
 
   return (
     <>
       <section className="admin-header">
         <h1 className="admin-title">Administración de productos</h1>
         <p className="admin-subtitle">
-          En esta sección puedes gestionar el catálogo de productos de Hug's
-          Store.
+          En esta sección puedes gestionar el catálogo de productos de PawStore.
         </p>
       </section>
       <section className="admin-card">
-        <h2 className="admin-card-title">Listado de Productos</h2>
-        <div className="admin-table-container">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Categoría</th>
-                <th>Stock</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="products-table">
-              {products.map((product) => (
-                <tr key={product.id}>
-                  <td className="cell-id">{product.id}</td>
-                  <td className="cell-name">{product.name}</td>
-                  <td>${product.price}</td>
-                  <td>{product.category}</td>
-                  <td>{product.stock}</td>
-                  <td className="cell-actions">
-                    <div className="actions-group">
-                      <button
-                        className="btn-action-edit"
-                        onClick={() => {
-                          setProductId(product.id);
-                          setView("editProduct");
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="btn-action-delete"
-                        onClick={async () => {
-                          try {
-                            await apiServices.deleteProduct(product.id);
-                            alert("Producto eliminado correctamente");
-                            const products = await apiServices.getProducts();
-                            setProducts(products);
-                          } catch (error) {
-                            alert(error.message);
-                          }
-                        }}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <h2 className="admin-card-title">Listado de Productos</h2>
+            <div className="admin-table-container">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table">
+                  {products.map((product) => (
+                    <tr key={product.id}>
+                      <td className="cell-id">{product.id}</td>
+                      <td className="cell-name">{product.name}</td>
+                      <td>${product.price}</td>
+                      <td>{product.category}</td>
+                      <td>{product.stock}</td>
+                      <td className="cell-actions">
+                        <div className="actions-group">
+                          <Link
+                            to={`/admin/editar/${product.id}`}
+                            className="btn-action-edit"
+                          >
+                            Editar
+                          </Link>
+                          <button
+                            className="btn-action-delete"
+                            onClick={async () => {
+                              try {
+                                await apiServices.deleteProduct(product.id);
+                                alert("Producto eliminado correctamente");
+                                refetch();
+                              } catch (error) {
+                                console.error(error.message);
+                              }
+                            }}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </section>
 
       <section className="admin-card">
@@ -88,8 +92,7 @@ function Admin({ setView, setProductId }) {
             try {
               await apiServices.createProduct(values);
               alert("Producto agregado correctamente");
-              const products = await apiServices.getProducts();
-              setProducts(products);
+              refetch();
               resetForm();
             } catch (error) {
               alert(error.message);
