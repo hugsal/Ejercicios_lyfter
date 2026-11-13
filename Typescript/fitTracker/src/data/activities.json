@@ -1,0 +1,24 @@
+{
+  "1": [
+    {
+      "id": "seed-running",
+      "name": "Running",
+      "durationMinutes": 45,
+      "caloriesPerMinute": 10.4,
+      "distanceKm": 5.2
+    },
+    {
+      "id": "seed-squats",
+      "name": "Squats",
+      "durationMinutes": 30,
+      "caloriesPerMinute": 10
+    },
+    {
+      "id": "seed-swimming",
+      "name": "Swimming",
+      "durationMinutes": 60,
+      "caloriesPerMinute": 12,
+      "distanceKm": 9.6
+    }
+  ]
+}
